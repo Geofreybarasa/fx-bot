@@ -1,353 +1,2363 @@
 /* ==========================================================================
-   FX Bot — Landing page styles
-   Design tokens live in :root. Change values there to re-theme the page.
+   FX BOT — RESPONSIVE LANDING PAGE
+   Complete responsive stylesheet
+   Designed for:
+   - Small phones
+   - Large phones
+   - Foldables
+   - Landscape phones
+   - Tablets
+   - Laptops
+   - Desktop
+   - Large desktop displays
+
+   IMPORTANT:
+   This stylesheet keeps the existing HTML class names.
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. DESIGN TOKENS
    ========================================================================== */
 
 :root {
-  /* Color */
+  /* ---------- Colors ---------- */
+
   --bg: #05070c;
   --bg-raised: #0d121b;
   --bg-card: #10161f;
+
   --border: #1c2431;
   --border-soft: #171e29;
+
   --green: #17d9a3;
   --green-strong: #10c495;
   --green-dim: rgba(23, 217, 163, 0.14);
+
   --red: #ff5470;
+
   --text: #f4f6f8;
   --text-dim: #9aa5b4;
   --text-faint: #5b6675;
+
   --gold: #e8b04b;
 
-  /* Type */
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* Layout */
-  --page-max: 1120px;
-  --pad-inline: clamp(18px, 4vw, 32px);
+  /* ---------- Typography ---------- */
+
+  --font-body:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  --font-mono:
+    "JetBrains Mono",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+
+
+  /* ---------- Layout ---------- */
+
+  --page-max: 100%;
+
+  /*
+    Fluid horizontal padding.
+
+    Minimum:
+    14px
+
+    Preferred:
+    4vw
+
+    Maximum:
+    32px
+  */
+  --pad-inline: clamp(14px, 4vw, 32px);
+
+  /*
+    Small spacing scale.
+  */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+
+
+  /* ---------- Radius ---------- */
+
   --radius-sm: 10px;
   --radius-md: 14px;
   --radius-lg: 20px;
+
+
+  /* ---------- Navigation ---------- */
+
   --nav-h: 64px;
   --header-h: 56px;
   --ticker-h: 34px;
 
+
+  /* ---------- Safe areas ---------- */
+
   --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
 }
 
-/* ---------- Reset ---------- */
-*, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--header-h) + var(--ticker-h) + var(--safe-top)); }
+
+/* ==========================================================================
+   2. GLOBAL RESET
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+html {
+  /*
+    Prevent mobile browsers from automatically changing font sizes.
+  */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+
+  /*
+    Smooth scrolling where supported.
+  */
+  scroll-behavior: smooth;
+
+  /*
+    Keep anchor targets below sticky header/ticker.
+  */
+  scroll-padding-top:
+    calc(
+      var(--header-h) +
+      var(--ticker-h) +
+      var(--safe-top) +
+      16px
+    );
+
+  /*
+    Prevent horizontal page overflow.
+  */
+  overflow-x: hidden;
+
+  /*
+    Improve mobile scrolling.
+  */
+  -webkit-overflow-scrolling: touch;
+}
+
+
 body {
+  min-width: 0;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100svh;
+
   margin: 0;
+
   background: var(--bg);
   color: var(--text);
+
   font-family: var(--font-body);
+  font-size: 16px;
   line-height: 1.5;
+
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /*
+    Account for devices with display cutouts.
+  */
   padding-top: var(--safe-top);
-  padding-bottom: calc(var(--nav-h) + var(--safe-bottom));
+
+  /*
+    Bottom navigation occupies fixed space.
+  */
+  padding-bottom:
+    calc(
+      var(--nav-h) +
+      var(--safe-bottom)
+    );
+
+  /*
+    Never allow a child to create page-wide horizontal scrolling.
+  */
+  overflow-x: hidden;
 }
-img { max-width: 100%; display: block; }
-a { color: inherit; text-decoration: none; }
-ul { list-style: none; margin: 0; padding: 0; }
-button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
-h1, h2, h3, p { margin: 0; }
+
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+
+img {
+  display: block;
+  height: auto;
+}
+
+
+svg {
+  display: block;
+}
+
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+
+button {
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+a {
+  overflow-wrap: break-word;
+}
+
+
+/*
+  Prevent flex/grid children from forcing their parent wider.
+*/
+main,
+section,
+header,
+footer,
+article,
+nav,
+div {
+  min-width: 0;
+}
+
+
+/* ==========================================================================
+   3. ACCESSIBILITY
+   ========================================================================== */
 
 .sr-only {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  padding: 0;
+  margin: -1px;
+
+  overflow: hidden;
+
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+
+  white-space: nowrap;
+  border: 0;
 }
+
+
 .skip-link {
-  position: absolute; left: 12px; top: -60px; z-index: 1000;
-  background: var(--green); color: #04120d; padding: 10px 16px;
-  border-radius: var(--radius-sm); font-weight: 600; transition: top .15s ease;
+  position: absolute;
+
+  left: 12px;
+  top: -60px;
+
+  z-index: 1000;
+
+  background: var(--green);
+  color: #04120d;
+
+  padding: 10px 16px;
+
+  border-radius: var(--radius-sm);
+
+  font-weight: 600;
+
+  transition: top 0.15s ease;
 }
-.skip-link:focus { top: calc(12px + var(--safe-top)); }
+
+
+.skip-link:focus {
+  top: calc(12px + var(--safe-top));
+}
+
 
 :focus-visible {
   outline: 2px solid var(--green);
-  outline-offset: 2px;
+  outline-offset: 3px;
   border-radius: 4px;
 }
 
+
+/* ==========================================================================
+   4. REDUCED MOTION
+   ========================================================================== */
+
 @media (prefers-reduced-motion: reduce) {
-  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-/* ---------- Buttons ---------- */
+
+/* ==========================================================================
+   5. BUTTONS
+   ========================================================================== */
+
 .btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 12px 20px; border-radius: var(--radius-sm);
-  font-weight: 600; font-size: 15px; line-height: 1;
-  transition: transform .12s ease, background-color .15s ease, border-color .15s ease;
-  white-space: nowrap;
-}
-.btn svg { width: 16px; height: 16px; flex: none; }
-.btn:active { transform: scale(0.98); }
-.btn--primary { background: var(--green); color: #04120d; }
-.btn--primary:hover { background: var(--green-strong); }
-.btn--secondary {
-  background: var(--bg-raised); color: var(--text); border: 1px solid var(--border);
-}
-.btn--secondary:hover { border-color: #2a3444; }
-.btn--ghost { background: transparent; border: 1px solid var(--border); color: var(--text); }
-.btn--ghost:hover { border-color: #2a3444; }
-.btn--pill { border-radius: 999px; padding: 9px 18px; font-size: 14px; }
-.btn--lg { width: 100%; padding: 15px 20px; font-size: 16px; }
-.btn--block { display: flex; }
+  display: inline-flex;
 
-/* ---------- Header ---------- */
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  /*
+    min-height gives touch-friendly controls.
+  */
+  min-height: 44px;
+
+  padding: 12px 20px;
+
+  border-radius: var(--radius-sm);
+
+  font-size: 15px;
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  text-align: center;
+
+  /*
+    IMPORTANT:
+    We do NOT force nowrap globally anymore.
+    Long button labels can wrap when necessary.
+  */
+  white-space: normal;
+
+  overflow-wrap: anywhere;
+
+  transition:
+    transform 0.12s ease,
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+
+  touch-action: manipulation;
+}
+
+
+.btn svg {
+  width: 16px;
+  height: 16px;
+
+  flex: 0 0 auto;
+}
+
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+
+.btn--primary {
+  background: var(--green);
+  color: #04120d;
+}
+
+
+.btn--primary:hover {
+  background: var(--green-strong);
+}
+
+
+.btn--secondary {
+  background: var(--bg-raised);
+  color: var(--text);
+
+  border: 1px solid var(--border);
+}
+
+
+.btn--secondary:hover {
+  border-color: #2a3444;
+}
+
+
+.btn--ghost {
+  background: transparent;
+
+  border: 1px solid var(--border);
+
+  color: var(--text);
+}
+
+
+.btn--ghost:hover {
+  border-color: #2a3444;
+}
+
+
+.btn--pill {
+  border-radius: 999px;
+
+  padding: 9px 18px;
+
+  min-height: 40px;
+
+  font-size: 14px;
+}
+
+
+.btn--lg {
+  width: 100%;
+
+  min-height: 48px;
+
+  padding: 14px 20px;
+
+  font-size: 16px;
+}
+
+
+.btn--block {
+  display: flex;
+  width: 100%;
+}
+
+
+/* ==========================================================================
+   6. HEADER
+   ========================================================================== */
+
 .site-header {
-  position: sticky; top: 0; z-index: 100;
+  position: sticky;
+
+  top: 0;
+
+  z-index: 100;
+
+  width: 100%;
+
   background: rgba(5, 7, 12, 0.92);
+
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
   border-bottom: 1px solid var(--border-soft);
 }
-.site-header__inner {
-  max-width: var(--page-max); margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px var(--pad-inline);
-  height: var(--header-h);
-}
-.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
-.brand__mark {
-  display: grid; place-items: center;
-  width: 34px; height: 34px; border-radius: 9px;
-  background: var(--green-dim); color: var(--green);
-  font-weight: 800; font-size: 13px; letter-spacing: 0.02em;
-  flex: none;
-}
-.brand__text { display: flex; flex-direction: column; line-height: 1.1; min-width: 0; }
-.brand__name { font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.brand__est { font-size: 10px; letter-spacing: 0.08em; color: var(--text-faint); }
 
-/* ---------- Ticker marquee ---------- */
-.ticker {
-  height: var(--ticker-h);
-  overflow: hidden;
-  background: var(--bg);
-  border-top: 1px solid var(--border-soft);
-  mask-image: linear-gradient(to right, transparent 0, black 24px, black calc(100% - 24px), transparent 100%);
+
+.site-header__inner {
+  width: 100%;
+  max-width: var(--page-max);
+
+  min-height: var(--header-h);
+
+  margin: 0 auto;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding:
+    10px
+    max(
+      var(--pad-inline),
+      var(--safe-left)
+    )
+    10px
+    max(
+      var(--pad-inline),
+      var(--safe-right)
+    );
 }
-.ticker__track { display: flex; width: max-content; height: 100%; }
+
+
+.brand {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+
+  flex: 1 1 auto;
+}
+
+
+.brand__mark {
+  display: grid;
+
+  place-items: center;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 9px;
+
+  background: var(--green-dim);
+  color: var(--green);
+
+  font-weight: 800;
+  font-size: 13px;
+
+  letter-spacing: 0.02em;
+
+  flex: 0 0 auto;
+}
+
+
+.brand__text {
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+
+  line-height: 1.1;
+}
+
+
+.brand__name {
+  min-width: 0;
+
+  font-weight: 700;
+
+  font-size: 15px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+.brand__est {
+  font-size: 10px;
+
+  letter-spacing: 0.08em;
+
+  color: var(--text-faint);
+
+  white-space: nowrap;
+}
+
+
+/* ==========================================================================
+   7. TICKER
+   ========================================================================== */
+
+.ticker {
+  width: 100%;
+
+  height: var(--ticker-h);
+
+  overflow: hidden;
+
+  background: var(--bg);
+
+  border-top: 1px solid var(--border-soft);
+
+  /*
+    Fade the ticker edges.
+  */
+  mask-image:
+    linear-gradient(
+      to right,
+      transparent 0,
+      black 24px,
+      black calc(100% - 24px),
+      transparent 100%
+    );
+
+  -webkit-mask-image:
+    linear-gradient(
+      to right,
+      transparent 0,
+      black 24px,
+      black calc(100% - 24px),
+      transparent 100%
+    );
+}
+
+
+.ticker__track {
+  display: flex;
+
+  width: max-content;
+
+  min-width: max-content;
+
+  height: 100%;
+}
+
+
 .ticker__list {
-  display: flex; align-items: center; gap: 28px;
-  padding: 0 14px; white-space: nowrap; height: 100%;
-  animation: ticker-scroll 32s linear infinite;
+  display: flex;
+
+  align-items: center;
+
+  gap: 28px;
+
+  height: 100%;
+
+  padding: 0 14px;
+
+  white-space: nowrap;
+
+  animation:
+    ticker-scroll
+    32s
+    linear
+    infinite;
+
   will-change: transform;
 }
-/* Duplicate track is appended by js/ticker.js for a seamless right→left loop */
-@keyframes ticker-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-.ticker__item {
-  display: inline-flex; align-items: baseline; gap: 6px;
-  font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);
-}
-.ticker__item.is-placeholder { color: var(--text-faint); font-style: normal; }
-.ticker__symbol { color: var(--text); font-weight: 600; }
-.ticker__price { color: var(--text); font-weight: 600; }
-.ticker__change { font-weight: 600; }
-.ticker__change.is-up { color: var(--green); }
-.ticker__change.is-down { color: var(--red); }
 
-/* ---------- Hero ---------- */
-.hero { position: relative; }
-.hero__media { position: relative; height: 46vh; min-height: 300px; max-height: 460px; overflow: hidden; }
-.hero__img { width: 100%; height: 100%; object-fit: cover; object-position: 70% 30%; }
+
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+
+.ticker__item {
+  display: inline-flex;
+
+  align-items: baseline;
+
+  gap: 6px;
+
+  font-family: var(--font-mono);
+
+  font-size: 12px;
+
+  color: var(--text-dim);
+
+  flex: 0 0 auto;
+}
+
+
+.ticker__item.is-placeholder {
+  color: var(--text-faint);
+  font-style: normal;
+}
+
+
+.ticker__symbol {
+  color: var(--text);
+  font-weight: 600;
+}
+
+
+.ticker__price {
+  color: var(--text);
+  font-weight: 600;
+}
+
+
+.ticker__change {
+  font-weight: 600;
+}
+
+
+.ticker__change.is-up {
+  color: var(--green);
+}
+
+
+.ticker__change.is-down {
+  color: var(--red);
+}
+
+
+/* ==========================================================================
+   8. HERO
+   ========================================================================== */
+
+.hero {
+  position: relative;
+
+  width: 100%;
+
+  min-width: 0;
+}
+
+
+.hero__media {
+  position: relative;
+
+  width: 100%;
+
+  /*
+    svh is more reliable on mobile because it represents the
+    small viewport height and doesn't jump as browser chrome changes.
+  */
+  height: clamp(
+    260px,
+    46svh,
+    460px
+  );
+
+  min-height: 260px;
+
+  overflow: hidden;
+}
+
+
+.hero__img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  object-position: 70% 30%;
+}
+
+
 .hero__glow {
-  position: absolute; top: -10%; left: 50%; transform: translateX(-50%);
-  width: 60%; aspect-ratio: 2.4 / 1; border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(255,255,255,0.9), rgba(255,255,255,0) 70%);
-  filter: blur(6px); opacity: 0.9; pointer-events: none;
+  position: absolute;
+
+  top: -10%;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: min(60%, 720px);
+
+  aspect-ratio: 2.4 / 1;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      closest-side,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0) 70%
+    );
+
+  filter: blur(6px);
+
+  opacity: 0.9;
+
+  pointer-events: none;
 }
+
+
 .hero__scrim {
-  position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(5,7,12,0) 40%, var(--bg) 96%);
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 7, 12, 0) 35%,
+      var(--bg) 96%
+    );
 }
-.hero__content { max-width: var(--page-max); margin: 0 auto; padding: 22px var(--pad-inline) 8px; }
+
+
+.hero__content {
+  width: 100%;
+  max-width: var(--page-max);
+
+  margin: 0 auto;
+
+  padding:
+    22px
+    var(--pad-inline)
+    8px;
+}
+
 
 .badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: var(--green-dim); color: var(--green);
-  border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 600;
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  max-width: 100%;
+
+  background: var(--green-dim);
+
+  color: var(--green);
+
+  border-radius: 999px;
+
+  padding: 6px 12px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
   margin-bottom: 16px;
 }
-.badge__icon { width: 14px; height: 14px; }
 
-.hero__title { font-size: clamp(28px, 6vw, 44px); font-weight: 800; letter-spacing: -0.01em; line-height: 1.12; max-width: 18ch; }
-.hero__title-accent { color: var(--green); }
-.hero__subtitle { margin-top: 14px; color: var(--text-dim); font-size: 15px; max-width: 62ch; line-height: 1.6; }
 
-.hero__actions { display: flex; flex-direction: column; gap: 10px; margin-top: 22px; }
-@media (min-width: 640px) {
-  .hero__actions { flex-direction: row; }
-  .btn--lg { width: auto; }
+.badge__icon {
+  width: 14px;
+  height: 14px;
+
+  flex: 0 0 auto;
 }
 
-/* ---------- Quick actions ---------- */
+
+.hero__title {
+  max-width: 18ch;
+
+  font-size:
+    clamp(
+      28px,
+      6vw,
+      44px
+    );
+
+  font-weight: 800;
+
+  letter-spacing: -0.01em;
+
+  line-height: 1.12;
+
+  overflow-wrap: normal;
+}
+
+
+.hero__title-accent {
+  color: var(--green);
+}
+
+
+.hero__subtitle {
+  max-width: 62ch;
+
+  margin-top: 14px;
+
+  color: var(--text-dim);
+
+  font-size:
+    clamp(
+      14px,
+      2vw,
+      15px
+    );
+
+  line-height: 1.6;
+}
+
+
+.hero__actions {
+  display: flex;
+
+  flex-direction: column;
+
+  width: 100%;
+
+  gap: 10px;
+
+  margin-top: 22px;
+}
+
+
+/* ==========================================================================
+   9. QUICK ACTIONS
+   ========================================================================== */
+
 .quick-actions {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 8px; margin-top: 28px;
+  display: grid;
+
+  /*
+    minmax(0, 1fr) prevents grid children from forcing
+    the grid wider than its container.
+  */
+  grid-template-columns:
+    repeat(
+      4,
+      minmax(0, 1fr)
+    );
+
+  gap: 8px;
+
+  width: 100%;
+
+  margin-top: 28px;
 }
+
+
 .quick-action {
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  font-size: 11px; color: var(--text-dim); text-align: center;
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: flex-start;
+
+  gap: 8px;
+
+  min-width: 0;
+
   padding: 4px 2px;
+
+  color: var(--text-dim);
+
+  font-size: 11px;
+
+  line-height: 1.25;
+
+  text-align: center;
+
+  overflow-wrap: anywhere;
+
+  touch-action: manipulation;
 }
+
+
 .quick-action-icon-wrap,
 .quick-action__icon-wrap {
-  position: relative; display: grid; place-items: center;
-  width: 46px; height: 46px; border-radius: 50%;
-  background: var(--bg-raised); border: 1px solid var(--border);
+  position: relative;
+
+  display: grid;
+
+  place-items: center;
+
+  width: clamp(
+    40px,
+    11vw,
+    46px
+  );
+
+  height: clamp(
+    40px,
+    11vw,
+    46px
+  );
+
+  border-radius: 50%;
+
+  background: var(--bg-raised);
+
+  border: 1px solid var(--border);
+
+  flex: 0 0 auto;
 }
-.quick-action__icon { width: 20px; height: 20px; color: var(--text); }
+
+
+.quick-action__icon {
+  width: 20px;
+  height: 20px;
+
+  color: var(--text);
+
+  flex: 0 0 auto;
+}
+
+
 .quick-action__badge {
-  position: absolute; top: -6px; right: -6px;
-  background: var(--green); color: #04120d;
-  font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 999px;
+  position: absolute;
+
+  top: -6px;
+  right: -6px;
+
+  max-width: calc(100% + 12px);
+
+  background: var(--green);
+
+  color: #04120d;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  line-height: 1;
+
+  padding: 3px 6px;
+
+  border-radius: 999px;
+
+  white-space: nowrap;
 }
 
-/* ---------- Sections ---------- */
-.section { max-width: var(--page-max); margin: 0 auto; padding: 40px var(--pad-inline); border-top: 1px solid var(--border-soft); }
-.section__eyebrow { color: var(--green); font-size: 12px; font-weight: 700; letter-spacing: 0.04em; margin-bottom: 8px; }
-.section__title { font-size: clamp(20px, 3.2vw, 26px); font-weight: 700; letter-spacing: -0.01em; }
-.section__lede { margin-top: 14px; color: var(--text-dim); max-width: 68ch; line-height: 1.65; }
-.section__header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.section__more {
-  display: grid; place-items: center; width: 32px; height: 32px;
-  border-radius: 50%; border: 1px solid var(--border); color: var(--text-dim); flex: none;
-}
-.section__more svg { width: 16px; height: 16px; }
-.link-underline { display: inline-block; margin-top: 16px; color: var(--green); text-decoration: underline; text-underline-offset: 3px; font-size: 14px; font-weight: 600; }
 
-/* ---------- Market cards ---------- */
-.market-list { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
-.market-card {
-  display: flex; align-items: center; gap: 14px;
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius-md); padding: 16px;
-  transition: border-color .15s ease;
-}
-.market-card:hover { border-color: #2a3444; }
-.market-card__icon {
-  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px;
-  background: var(--green-dim); color: var(--green); font-weight: 700; font-size: 17px; flex: none;
-}
-.market-card__icon--gold { background: rgba(232, 176, 75, 0.14); color: var(--gold); }
-.market-card__body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-.market-card__name { font-weight: 600; font-size: 15px; }
-.market-card__meta { font-size: 13px; color: var(--text-dim); }
-.market-card__value { font-size: 13px; color: var(--text-dim); font-family: var(--font-mono); flex: none; }
-.market-card__chevron { width: 16px; height: 16px; color: var(--text-faint); flex: none; }
+/* ==========================================================================
+   10. SECTIONS
+   ========================================================================== */
 
-/* ---------- Reviews ---------- */
-.review-scroller {
-  display: flex; gap: 14px; margin-top: 20px;
-  overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-}
-.review-card {
-  scroll-snap-align: start; flex: 0 0 clamp(240px, 78vw, 300px);
-  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
-  padding: 18px; display: flex; flex-direction: column; gap: 12px;
-}
-.review-card__stars { color: var(--gold); letter-spacing: 2px; font-size: 13px; }
-.review-card__quote { font-size: 14px; color: var(--text-dim); line-height: 1.55; flex: 1; }
-.review-card__author { display: flex; align-items: center; gap: 10px; }
-.avatar {
-  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
-  background: var(--green-dim); color: var(--green); font-size: 12px; font-weight: 700; flex: none;
-}
-.review-card__name { display: block; font-size: 13px; font-weight: 600; }
-.review-card__country { display: block; font-size: 12px; color: var(--text-faint); }
+.section {
+  width: 100%;
+  max-width: var(--page-max);
 
-.feedback-cta {
-  display: block; text-align: center; margin-top: 22px;
-  border: 1px solid var(--border); border-radius: var(--radius-md);
-  padding: 14px; color: var(--green); font-weight: 600; font-size: 14px;
-}
+  margin: 0 auto;
 
-/* ---------- Feature cards ---------- */
-.feature-list { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
-.feature-card {
-  display: flex; align-items: flex-start; gap: 14px;
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius-md); padding: 16px;
-}
-.feature-card__icon {
-  display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px;
-  background: var(--green-dim); color: var(--green); flex: none;
-}
-.feature-card__icon svg { width: 19px; height: 19px; }
-.feature-card__title { display: block; font-weight: 600; font-size: 14.5px; margin-bottom: 3px; }
-.feature-card__desc { display: block; font-size: 13.5px; color: var(--text-dim); line-height: 1.5; }
+  padding:
+    40px
+    var(--pad-inline);
 
-/* ---------- Footer ---------- */
-.site-footer {
-  max-width: var(--page-max); margin: 0 auto;
-  padding: 32px var(--pad-inline) 40px; border-top: 1px solid var(--border-soft);
-}
-.site-footer__brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.site-footer__disclaimer { font-size: 12.5px; color: var(--text-faint); line-height: 1.6; max-width: 72ch; }
-.site-footer__links { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 18px; }
-.site-footer__links a { font-size: 13px; color: var(--text-dim); text-decoration: underline; text-underline-offset: 3px; }
-
-/* ---------- Bottom app nav ---------- */
-.app-nav {
-  position: fixed; left: 0; right: 0; bottom: 0; z-index: 100;
-  display: flex; justify-content: space-around;
-  height: var(--nav-h); padding-bottom: var(--safe-bottom);
-  background: rgba(8, 11, 17, 0.96); backdrop-filter: blur(10px);
   border-top: 1px solid var(--border-soft);
 }
+
+
+.section__eyebrow {
+  color: var(--green);
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.04em;
+
+  margin-bottom: 8px;
+}
+
+
+.section__title {
+  max-width: 100%;
+
+  font-size:
+    clamp(
+      20px,
+      3.2vw,
+      26px
+    );
+
+  font-weight: 700;
+
+  letter-spacing: -0.01em;
+
+  line-height: 1.2;
+}
+
+
+.section__lede {
+  max-width: 68ch;
+
+  margin-top: 14px;
+
+  color: var(--text-dim);
+
+  line-height: 1.65;
+}
+
+
+.section__header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  min-width: 0;
+}
+
+
+.section__header > * {
+  min-width: 0;
+}
+
+
+.section__more {
+  display: grid;
+
+  place-items: center;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: 50%;
+
+  border: 1px solid var(--border);
+
+  color: var(--text-dim);
+
+  flex: 0 0 auto;
+}
+
+
+.section__more svg {
+  width: 16px;
+  height: 16px;
+}
+
+
+.link-underline {
+  display: inline-block;
+
+  max-width: 100%;
+
+  margin-top: 16px;
+
+  color: var(--green);
+
+  text-decoration: underline;
+
+  text-underline-offset: 3px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================================
+   11. MARKET CARDS
+   ========================================================================== */
+
+.market-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  width: 100%;
+
+  margin-top: 18px;
+}
+
+
+.market-card {
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+  width: 100%;
+
+  min-width: 0;
+
+  background: var(--bg-card);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-md);
+
+  padding: 16px;
+
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+
+.market-card:hover {
+  border-color: #2a3444;
+}
+
+
+.market-card__icon {
+  display: grid;
+
+  place-items: center;
+
+  width: 40px;
+  height: 40px;
+
+  border-radius: 10px;
+
+  background: var(--green-dim);
+
+  color: var(--green);
+
+  font-weight: 700;
+
+  font-size: 17px;
+
+  flex: 0 0 auto;
+}
+
+
+.market-card__icon--gold {
+  background: rgba(232, 176, 75, 0.14);
+
+  color: var(--gold);
+}
+
+
+.market-card__body {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+
+  min-width: 0;
+
+  flex: 1 1 auto;
+}
+
+
+.market-card__name {
+  min-width: 0;
+
+  font-weight: 600;
+
+  font-size: 15px;
+
+  overflow-wrap: anywhere;
+}
+
+
+.market-card__meta {
+  min-width: 0;
+
+  font-size: 13px;
+
+  color: var(--text-dim);
+
+  overflow-wrap: anywhere;
+}
+
+
+.market-card__value {
+  min-width: 0;
+
+  max-width: 35%;
+
+  font-size: 13px;
+
+  color: var(--text-dim);
+
+  font-family: var(--font-mono);
+
+  text-align: right;
+
+  overflow-wrap: anywhere;
+
+  flex: 0 1 auto;
+}
+
+
+.market-card__chevron {
+  width: 16px;
+  height: 16px;
+
+  color: var(--text-faint);
+
+  flex: 0 0 auto;
+}
+
+
+/* ==========================================================================
+   12. REVIEWS
+   ========================================================================== */
+
+.review-scroller {
+  display: flex;
+
+  gap: 14px;
+
+  width: 100%;
+
+  margin-top: 20px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-snap-type: x mandatory;
+
+  padding-bottom: 8px;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: thin;
+
+  /*
+    Prevent horizontal scroller from increasing page width.
+  */
+  overscroll-behavior-x: contain;
+}
+
+
+.review-card {
+  scroll-snap-align: start;
+
+  /*
+    Responsive card width.
+  */
+  flex:
+    0 0
+    clamp(
+      240px,
+      78vw,
+      300px
+    );
+
+  min-width: 0;
+
+  background: var(--bg-card);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-md);
+
+  padding: 18px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+
+.review-card__stars {
+  color: var(--gold);
+
+  letter-spacing: 2px;
+
+  font-size: 13px;
+}
+
+
+.review-card__quote {
+  min-width: 0;
+
+  font-size: 14px;
+
+  color: var(--text-dim);
+
+  line-height: 1.55;
+
+  flex: 1;
+
+  overflow-wrap: anywhere;
+}
+
+
+.review-card__author {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+
+.avatar {
+  display: grid;
+
+  place-items: center;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+
+  background: var(--green-dim);
+
+  color: var(--green);
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  flex: 0 0 auto;
+}
+
+
+.review-card__name {
+  display: block;
+
+  min-width: 0;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  overflow-wrap: anywhere;
+}
+
+
+.review-card__country {
+  display: block;
+
+  min-width: 0;
+
+  font-size: 12px;
+
+  color: var(--text-faint);
+
+  overflow-wrap: anywhere;
+}
+
+
+.feedback-cta {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 22px;
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-md);
+
+  padding: 14px;
+
+  color: var(--green);
+
+  font-weight: 600;
+
+  font-size: 14px;
+
+  text-align: center;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================================
+   13. FEATURE CARDS
+   ========================================================================== */
+
+.feature-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+
+  width: 100%;
+
+  margin-top: 18px;
+}
+
+
+.feature-card {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 14px;
+
+  width: 100%;
+
+  min-width: 0;
+
+  background: var(--bg-card);
+
+  border: 1px solid var(--border);
+
+  border-radius: var(--radius-md);
+
+  padding: 16px;
+}
+
+
+.feature-card__icon {
+  display: grid;
+
+  place-items: center;
+
+  width: 38px;
+  height: 38px;
+
+  border-radius: 10px;
+
+  background: var(--green-dim);
+
+  color: var(--green);
+
+  flex: 0 0 auto;
+}
+
+
+.feature-card__icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+
+.feature-card__title {
+  display: block;
+
+  min-width: 0;
+
+  font-weight: 600;
+
+  font-size: 14.5px;
+
+  line-height: 1.3;
+
+  margin-bottom: 3px;
+
+  overflow-wrap: anywhere;
+}
+
+
+.feature-card__desc {
+  display: block;
+
+  min-width: 0;
+
+  font-size: 13.5px;
+
+  color: var(--text-dim);
+
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================================
+   14. FOOTER
+   ========================================================================== */
+
+.site-footer {
+  width: 100%;
+  max-width: var(--page-max);
+
+  margin: 0 auto;
+
+  padding:
+    32px
+    var(--pad-inline)
+    40px;
+
+  border-top: 1px solid var(--border-soft);
+}
+
+
+.site-footer__brand {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+
+  margin-bottom: 14px;
+}
+
+
+.site-footer__disclaimer {
+  max-width: 72ch;
+
+  font-size: 12.5px;
+
+  color: var(--text-faint);
+
+  line-height: 1.6;
+
+  overflow-wrap: anywhere;
+}
+
+
+.site-footer__links {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px 18px;
+
+  margin-top: 18px;
+}
+
+
+.site-footer__links a {
+  min-height: 32px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  font-size: 13px;
+
+  color: var(--text-dim);
+
+  text-decoration: underline;
+
+  text-underline-offset: 3px;
+}
+
+
+/* ==========================================================================
+   15. FIXED BOTTOM APP NAV
+   ========================================================================== */
+
+.app-nav {
+  position: fixed;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  z-index: 100;
+
+  width: 100%;
+
+  /*
+    Navigation gets additional height for phones
+    with a home indicator.
+  */
+  height:
+    calc(
+      var(--nav-h) +
+      var(--safe-bottom)
+    );
+
+  padding:
+    0
+    max(
+      0px,
+      var(--safe-right)
+    )
+    var(--safe-bottom)
+    max(
+      0px,
+      var(--safe-left)
+    );
+
+  display: flex;
+
+  align-items: stretch;
+
+  background: rgba(8, 11, 17, 0.96);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border-top: 1px solid var(--border-soft);
+}
+
+
 .app-nav__item {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 4px; flex: 1; font-size: 10.5px; color: var(--text-faint); padding-top: 6px;
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 4px;
+
+  min-width: 0;
+
+  min-height: 44px;
+
+  flex: 1 1 0;
+
+  padding:
+    6px
+    2px
+    4px;
+
+  font-size: 10.5px;
+
+  line-height: 1.15;
+
+  color: var(--text-faint);
+
+  text-align: center;
+
+  touch-action: manipulation;
 }
-.app-nav__item svg { width: 21px; height: 21px; }
-.app-nav__item.is-active { color: var(--green); }
+
+
+.app-nav__item svg {
+  width: 21px;
+  height: 21px;
+
+  flex: 0 0 auto;
+}
+
+
+.app-nav__item span {
+  max-width: 100%;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.app-nav__item.is-active {
+  color: var(--green);
+}
+
 
 /* ==========================================================================
-   Responsive: small / folded phones (e.g. Galaxy Fold cover screen ~280px)
+   16. VERY SMALL PHONES
+   280px–340px
    ========================================================================== */
+
 @media (max-width: 340px) {
-  :root { --pad-inline: 14px; }
-  .quick-actions { gap: 6px; }
-  .quick-action-icon-wrap, .quick-action__icon-wrap { width: 40px; height: 40px; }
-  .review-card { flex-basis: 84vw; }
-  .app-nav__item span { font-size: 9.5px; }
+
+  :root {
+    --pad-inline: 12px;
+  }
+
+
+  body {
+    font-size: 15px;
+  }
+
+
+  .site-header__inner {
+    gap: 8px;
+  }
+
+
+  .brand {
+    gap: 7px;
+  }
+
+
+  .brand__mark {
+    width: 31px;
+    height: 31px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+  }
+
+
+  .brand__name {
+    font-size: 14px;
+  }
+
+
+  .brand__est {
+    font-size: 9px;
+  }
+
+
+  .hero__media {
+    /*
+      Do not allow the hero to dominate tiny screens.
+    */
+    height: clamp(
+      240px,
+      44svh,
+      320px
+    );
+
+    min-height: 240px;
+  }
+
+
+  .hero__content {
+    padding-top: 18px;
+  }
+
+
+  .hero__title {
+    font-size: clamp(
+      26px,
+      9vw,
+      32px
+    );
+
+    max-width: 16ch;
+  }
+
+
+  .hero__subtitle {
+    font-size: 14px;
+  }
+
+
+  .hero__actions {
+    gap: 8px;
+  }
+
+
+  .btn {
+    width: 100%;
+
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+
+  .quick-actions {
+    gap: 6px;
+  }
+
+
+  .quick-action {
+    font-size: 10px;
+
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+
+  .quick-action-icon-wrap,
+  .quick-action__icon-wrap {
+    width: 40px;
+    height: 40px;
+  }
+
+
+  .quick-action__icon {
+    width: 18px;
+    height: 18px;
+  }
+
+
+  .market-card {
+    gap: 9px;
+
+    padding: 13px;
+  }
+
+
+  .market-card__icon {
+    width: 36px;
+    height: 36px;
+
+    font-size: 15px;
+  }
+
+
+  .market-card__name {
+    font-size: 14px;
+  }
+
+
+  .market-card__meta {
+    font-size: 12px;
+  }
+
+
+  .market-card__value {
+    max-width: 30%;
+
+    font-size: 11px;
+  }
+
+
+  .market-card__chevron {
+    width: 14px;
+    height: 14px;
+  }
+
+
+  .review-card {
+    flex-basis: 84vw;
+
+    padding: 15px;
+  }
+
+
+  .app-nav__item {
+    font-size: 9px;
+
+    padding-left: 1px;
+    padding-right: 1px;
+  }
+
+
+  .app-nav__item svg {
+    width: 19px;
+    height: 19px;
+  }
 }
 
+
 /* ==========================================================================
-   Responsive: tablet and up
+   17. LANDSCAPE PHONES
    ========================================================================== */
+
+@media (
+  max-height: 520px
+) and (
+  orientation: landscape
+) {
+
+  .hero__media {
+    height: 72svh;
+
+    min-height: 230px;
+
+    max-height: 420px;
+  }
+
+
+  .hero__content {
+    padding-top: 18px;
+  }
+
+
+  .hero__actions {
+    margin-top: 16px;
+  }
+
+
+  .quick-actions {
+    margin-top: 20px;
+  }
+
+
+  .section {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+}
+
+
+/* ==========================================================================
+   18. PHONES — 400px AND ABOVE
+   ========================================================================== */
+
+@media (min-width: 400px) {
+
+  .hero__actions {
+    /*
+      Buttons may share a row when there is enough width.
+    */
+    flex-direction: row;
+  }
+
+
+  .hero__actions .btn {
+    width: auto;
+    flex: 1 1 0;
+  }
+}
+
+
+/* ==========================================================================
+   19. TABLETS
+   600px+
+   ========================================================================== */
+
+@media (min-width: 600px) {
+
+  .hero__actions {
+    flex-direction: row;
+  }
+
+
+  .hero__actions .btn {
+    width: auto;
+    flex: 0 1 auto;
+  }
+
+
+  .btn--lg {
+    width: auto;
+  }
+
+
+  .quick-actions {
+    /*
+      Prevent the quick actions from becoming excessively wide.
+    */
+    max-width: 520px;
+  }
+
+
+  .review-card {
+    flex-basis: 300px;
+  }
+}
+
+
+/* ==========================================================================
+   20. TABLETS / SMALL LAPTOPS
+   768px+
+   ========================================================================== */
+
 @media (min-width: 768px) {
-  .hero__media { height: 52vh; }
-  .quick-actions { max-width: 460px; }
-  .market-list { display: grid; grid-template-columns: repeat(3, 1fr); }
-  .feature-list { display: grid; grid-template-columns: repeat(3, 1fr); }
+
+  .hero__media {
+    height: clamp(
+      420px,
+      52svh,
+      540px
+    );
+
+    min-height: 420px;
+  }
+
+
+  .hero__content {
+    padding-top: 30px;
+  }
+
+
+  .quick-actions {
+    max-width: 460px;
+  }
+
+
+  /*
+    3 columns are only introduced where there is enough
+    space for each card.
+  */
+  .market-list,
+  .feature-list {
+    display: grid;
+
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0, 1fr)
+      );
+
+    gap: 12px;
+  }
+
+
+  .market-card {
+    min-width: 0;
+  }
+
+
+  .market-card__value {
+    max-width: 32%;
+  }
+
+
+  .feature-card {
+    min-width: 0;
+  }
+
+
+  .review-card {
+    flex-basis: 300px;
+  }
 }
+
 
 /* ==========================================================================
-   Responsive: desktop — bottom nav becomes a secondary bar, content gets
-   more breathing room. (Reference design keeps the bottom bar even on
-   desktop; we preserve that intentionally.)
+   21. LARGE TABLETS / LAPTOPS
+   900px+
    ========================================================================== */
-@media (min-width: 1024px) {
-  body { padding-bottom: var(--nav-h); }
-  .hero__media { height: 60vh; max-height: 560px; }
-  .hero__content { padding-top: 32px; }
-  .section__lede { font-size: 15.5px; }
+
+@media (min-width: 900px) {
+
+  .hero__media {
+    height: clamp(
+      460px,
+      58svh,
+      560px
+    );
+  }
+
+
+  .hero__content {
+    padding-top: 34px;
+  }
+
+
+  .section {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+
+  .market-list,
+  .feature-list {
+    gap: 14px;
+  }
 }
 
-/* ---------- Dark/light awareness (page is dark-only by design, but keep
-   body background explicit per platform theming rules) ---------- */
+
+/* ==========================================================================
+   22. DESKTOP
+   1024px+
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+
+  /*
+    Desktop still retains your bottom navigation.
+  */
+  body {
+    padding-bottom:
+      calc(
+        var(--nav-h) +
+        var(--safe-bottom)
+      );
+  }
+
+
+  .hero__media {
+    height: clamp(
+      500px,
+      60svh,
+      560px
+    );
+
+    max-height: 560px;
+  }
+
+
+  .hero__content {
+    padding-top: 36px;
+  }
+
+
+  .section__lede {
+    font-size: 15.5px;
+  }
+
+
+  .app-nav__item {
+    font-size: 11px;
+  }
+}
+
+
+/* ==========================================================================
+   23. LARGE DESKTOP
+   1280px+
+   ========================================================================== */
+
+@media (min-width: 1280px) {
+
+  :root {
+    --pad-inline: 32px;
+  }
+
+
+  .hero__content {
+    padding-top: 40px;
+  }
+
+
+  .section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+
+
+  .market-list,
+  .feature-list {
+    gap: 16px;
+  }
+}
+
+
+/* ==========================================================================
+   24. VERY LARGE SCREENS
+   1600px+
+   ========================================================================== */
+
+@media (min-width: 1600px) {
+
+  /*
+    Keep the content readable instead of allowing it
+    to stretch across the entire monitor.
+  */
+  :root {
+    --page-max: 100%;
+    --pad-inline: clamp(16px, 3vw, 40px);
+  }
+}
+
+
+/* ==========================================================================
+   25. TOUCH DEVICES
+   ========================================================================== */
+
+@media (hover: none) and (pointer: coarse) {
+
+  /*
+    Avoid hover-only visual assumptions on touchscreens.
+  */
+
+  .btn:hover {
+    transform: none;
+  }
+
+
+  .market-card:hover {
+    border-color: var(--border);
+  }
+
+
+  .btn,
+  .app-nav__item,
+  .quick-action,
+  .feedback-cta {
+    touch-action: manipulation;
+  }
+}
+
+
+/* ==========================================================================
+   26. HIGH CONTRAST
+   ========================================================================== */
+
+@media (prefers-contrast: more) {
+
+  .btn--secondary,
+  .btn--ghost,
+  .market-card,
+  .feature-card,
+  .review-card,
+  .feedback-cta,
+  .section__more,
+  .quick-action-icon-wrap,
+  .quick-action__icon-wrap {
+    border-color: #4a5668;
+  }
+}
+
+
+/* ==========================================================================
+   27. PRINT
+   ========================================================================== */
+
+@media print {
+
+  body {
+    background: #fff;
+    color: #000;
+
+    padding: 0;
+  }
+
+
+  .site-header,
+  .ticker,
+  .app-nav,
+  .hero__glow,
+  .hero__scrim {
+    display: none !important;
+  }
+
+
+  .hero__media {
+    display: none;
+  }
+
+
+  .section,
+  .site-footer {
+    max-width: none;
+
+    border: 0;
+
+    padding: 20px;
+  }
+
+
+  .btn {
+    border: 1px solid #000;
+    color: #000;
+    background: #fff;
+  }
+}
+
+
+/* ==========================================================================
+   28. DARK MODE
+   The design is intentionally dark.
+   ========================================================================== */
+
 @media (prefers-color-scheme: light) {
-  body { background: var(--bg); color: var(--text); }
+
+  /*
+    Keep the application dark regardless of the OS preference.
+    This preserves your existing design.
+  */
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+  }
 }
