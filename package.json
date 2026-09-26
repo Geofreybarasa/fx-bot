@@ -1,0 +1,14 @@
+{
+  "name": "fx-bot",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Working name for the trading platform — client will rename before launch. See frontend/js/config.js and backend/README.md.",
+  "workspaces": [
+    "backend"
+  ],
+  "scripts": {
+    "backend:dev": "npm run dev --workspace backend",
+    "backend:test": "npm test --workspace backend",
+    "frontend:serve": "npx serve frontend"
+  }
+}

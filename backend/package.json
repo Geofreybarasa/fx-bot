@@ -1,0 +1,33 @@
+{
+  "name": "fx-bot-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "API + WebSocket backend for fx-bot (working name — client will rename before launch).",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "test": "node --test tests/*.test.js",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pino": "^9.3.2",
+    "pino-http": "^10.2.0",
+    "ws": "^8.18.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "pino-pretty": "^11.2.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
