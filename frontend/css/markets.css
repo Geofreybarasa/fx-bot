@@ -1,0 +1,122 @@
+/* ==========================================================================
+   Markets page — styles specific to markets.html.
+   Loaded AFTER css/styles.css, so all design tokens (--bg, --green,
+   --border, etc.) are already available from :root there.
+   ========================================================================== */
+
+/* ---------- Shared sub-page header (reuse for News, Calendar, Webinars…) ---------- */
+.page-header {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px var(--pad-inline);
+  background: rgba(5, 7, 12, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-soft);
+}
+.page-header__back {
+  display: grid; place-items: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg-raised); border: 1px solid var(--border);
+  color: var(--text); flex: none;
+}
+.page-header__back svg { width: 18px; height: 18px; }
+.page-header__title { font-size: 18px; font-weight: 700; }
+
+/* Homepage keeps its own header; sub-pages don't repeat the hero
+   top padding logic, so drop it here explicitly. */
+body.has-page-header { padding-top: var(--safe-top); }
+
+/* ---------- Page body ---------- */
+.markets-page { max-width: var(--page-max); margin: 0 auto; padding: 20px var(--pad-inline) 40px; }
+.markets-intro { color: var(--text-dim); font-size: 14.5px; line-height: 1.6; max-width: 68ch; }
+.markets-loading { color: var(--text-faint); font-size: 14px; padding: 24px 0; }
+.markets-disclosure { margin-top: 28px; color: var(--text-faint); font-size: 12.5px; line-height: 1.6; max-width: 70ch; }
+.markets-cta { margin-top: 18px; width: 100%; }
+
+/* ---------- Live status row ---------- */
+.live-status {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: 14px; font-size: 12.5px; color: var(--text-dim);
+}
+.live-status__dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+  box-shadow: 0 0 0 0 rgba(23, 217, 163, 0.6);
+  animation: live-pulse 2s ease-out infinite;
+}
+@keyframes live-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(23, 217, 163, 0.5); }
+  70%  { box-shadow: 0 0 0 6px rgba(23, 217, 163, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(23, 217, 163, 0); }
+}
+.live-status__label { color: var(--green); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px; }
+.live-status__sep { color: var(--text-faint); }
+
+/* ---------- Filter pills ---------- */
+.filter-pills { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+.filter-pill {
+  padding: 8px 16px; border-radius: 999px; font-size: 13px; font-weight: 600;
+  background: var(--bg-raised); border: 1px solid var(--border); color: var(--text-dim);
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+.filter-pill.is-active { background: var(--green); color: #04120d; border-color: var(--green); }
+
+/* ---------- Category section ---------- */
+.market-category { margin-top: 28px; scroll-margin-top: calc(var(--header-h) + 12px); }
+.market-category__header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.market-category__icon {
+  display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px;
+  background: var(--green-dim); color: var(--green); font-weight: 700; font-size: 16px; flex: none;
+}
+.market-category__icon--gold { background: rgba(232, 176, 75, 0.14); color: var(--gold); }
+.market-category__name { display: block; font-weight: 700; font-size: 16px; }
+.market-category__meta { display: block; font-size: 12.5px; color: var(--text-dim); margin-top: 2px; }
+
+/* ---------- Price table ---------- */
+.price-table {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.price-table__head {
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr;
+  padding: 10px 16px; font-size: 11px; color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border-soft);
+}
+.price-table__head-bid { text-align: right; }
+.price-table__head-change { text-align: right; }
+
+.price-row {
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr;
+  align-items: center; padding: 14px 16px;
+  border-bottom: 1px solid var(--border-soft);
+  transition: background-color .12s ease;
+}
+.price-row:last-child { border-bottom: none; }
+.price-row:hover { background: rgba(255, 255, 255, 0.02); }
+
+.price-row__symbol { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.price-row__symbol-main { font-weight: 700; font-size: 14.5px; }
+.price-row__symbol-meta { font-size: 12px; color: var(--text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.price-row__bid {
+  font-family: var(--font-mono); font-size: 14px; font-weight: 600; text-align: right;
+}
+
+.price-row__change {
+  display: flex; align-items: center; justify-content: flex-end; gap: 6px;
+  font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+}
+.price-row__change .is-up { color: var(--green); }
+.price-row__change .is-down { color: var(--red); }
+.price-row__dash { color: var(--text-faint); }
+.price-row__arrow { width: 14px; height: 14px; color: var(--text-faint); flex: none; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 400px) {
+  .price-table__head, .price-row { grid-template-columns: 1.4fr 1fr 0.9fr; padding-left: 12px; padding-right: 12px; }
+  .price-row__symbol-meta { display: none; } /* keep rows compact on small phones */
+}
+
+@media (min-width: 768px) {
+  .markets-cta { width: auto; min-width: 260px; }
+}
