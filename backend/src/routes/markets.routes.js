@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Public, read-only, display data — generous rate limit is fine here.
 router.get('/quotes', standard, marketsController.getQuotes);
+router.get('/catalog', standard, marketsController.getMarketCatalog);
 router.get('/', standard, marketsController.getMarketList);
 
 module.exports = router;
