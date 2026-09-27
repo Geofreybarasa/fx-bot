@@ -53,9 +53,13 @@
         data-action="auth:sign-in" → backend team: route to your auth flow
         (hosted login page or modal). No credentials are handled here.
       -->
-      <button type="button" class="btn btn--ghost btn--pill" data-action="auth:sign-in">
+        <a href="login.html">
+          <button type="button" class="btn btn--ghost btn--pill" data-action="auth:sign-in">
         Sign in
       </button>
+
+        </a>
+      
     </div>
 
     <!-- =========================================================
@@ -102,7 +106,7 @@
 
         <div class="hero__actions">
           <!-- data-action="account:open" → backend: send to KYC/onboarding flow -->
-          <a href="/account/new" class="btn btn--primary btn--lg" data-action="account:open">
+          <a href="/register.html" class="btn btn--primary btn--lg" data-action="account:open">
             Open an Account
             <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 14 14 6M14 6H8M14 6v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -379,15 +383,15 @@
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19V10M12 19V5M19 19v-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       <span>Markets</span>
     </a>
-    <a href="/trade" class="app-nav__item" data-action="nav:trade">
+    <a href="login.html" class="app-nav__item" data-action="nav:trade">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h13M17 7l-3-3M17 7l-3 3M20 17H7M7 17l3 3M7 17l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span>Trade</span>
     </a>
-    <a href="/earn" class="app-nav__item" data-action="nav:earn">
+    <a href="/promotions" class="app-nav__item" data-action="nav:earn">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/><circle cx="15" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/></svg>
       <span>Earn</span>
     </a>
-    <a href="/funds" class="app-nav__item" data-action="nav:funds">
+    <a href="/login" class="app-nav__item" data-action="nav:funds">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="1.8" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 10h17" stroke="currentColor" stroke-width="1.6"/></svg>
       <span>Funds</span>
     </a>
