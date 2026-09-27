@@ -20,4 +20,14 @@ async function getMarketList(req, res, next) {
   }
 }
 
-module.exports = { getQuotes, getMarketList };
+/** GET /api/v1/markets/catalog — full markets page: categories + every instrument. */
+async function getMarketCatalog(req, res, next) {
+  try {
+    const catalog = await marketDataService.getMarketCatalog();
+    res.json({ data: catalog, updatedAt: new Date().toISOString() });
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { getQuotes, getMarketList, getMarketCatalog };
