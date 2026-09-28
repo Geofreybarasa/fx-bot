@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FX Bot — Promotion</title>
+  <meta name="description" content="Active offers for new and existing FX Bot clients." />
+
+  <!--
+    ============================================================
+    SHIPPING NOTE FOR BACKEND TEAM — see frontend/docs/INTEGRATION.md
+    ============================================================
+    This page's promo cards are STATIC placeholder copy (data-promo-id
+    below), the same way the homepage's customer reviews are — not
+    live data. Before this ships:
+      - Replace with real offers, ideally from a small CMS/DB table
+        so marketing can add/retire promos without a code deploy.
+      - Every CTA below is a real <a href> + data-action, following
+        the same pattern as index.html: wire the destination behind
+        auth (signup pre-filled with a promo code, referral dashboard,
+        etc.) in js/main.js's ACTION_HANDLERS, not in this markup.
+      - "Single payment in USDT (TRC20)" is marketing copy carried
+        over from the reference design — implement actual billing
+        server-side with proper reconciliation before this is real.
+    ============================================================
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/markets.css" /> <!-- shared .page-header styles live here -->
+  <link rel="stylesheet" href="css/promotions.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+
+  <!-- Must load before other scripts — see js/config.js -->
+  <script src="js/config.js"></script>
+</head>
+<body class="has-page-header">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Same sub-page header pattern as markets.html -->
+  <header class="page-header">
+    <a href="/" class="page-header__back" data-action="nav:back" aria-label="Go back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <h1 class="page-header__title">Promotion</h1>
+  </header>
+
+  <main id="main" class="promotions-page">
+
+    <p class="promotions-intro">
+      Active offers for new and existing <span data-brand-name>FX Bot</span> clients.
+    </p>
+
+    <ul class="promo-list">
+      <li class="promo-card" data-promo-id="spring-drop-scalper-v2">
+        <span class="promo-card__icon promo-card__icon--active" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="promo-card__eyebrow promo-card__eyebrow--active">Active</span>
+        <h2 class="promo-card__title">Spring Drop — Scalper V2</h2>
+        <p class="promo-card__desc">Subscribe to the new Scalper V2 strategy and get your first month of bot access free.</p>
+        <a href="/promotions/spring-drop-scalper-v2" class="btn btn--primary btn--pill" data-action="promo:join">Join Now</a>
+      </li>
+
+      <li class="promo-card" data-promo-id="flagship-5-month-plan">
+        <span class="promo-card__icon promo-card__icon--flagship" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="9.5" width="16" height="10" rx="1.4" stroke="currentColor" stroke-width="1.6"/><path d="M4 13h16M12 9.5V20M8.5 9.5c-1.4 0-2.5-1-2.5-2.2S7.1 5 8.5 5c1.9 0 3.5 2.4 3.5 4.5M15.5 9.5c1.4 0 2.5-1 2.5-2.2S16.9 5 15.5 5C13.6 5 12 7.4 12 9.5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="promo-card__eyebrow promo-card__eyebrow--flagship">Flagship</span>
+        <h2 class="promo-card__title">£200 / 5 Months Plan</h2>
+        <p class="promo-card__desc">Single payment in USDT (TRC20) — covers full bot access, live trade signals and portfolio dashboard for 5 calendar months.</p>
+        <a href="/promotions/flagship-5-month-plan" class="btn btn--primary btn--pill" data-action="promo:view-plan">View Plan</a>
+      </li>
+
+      <li class="promo-card" data-promo-id="refer-and-earn">
+        <span class="promo-card__icon promo-card__icon--referral" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="8.5" cy="9" r="3" stroke="currentColor" stroke-width="1.6"/><circle cx="16" cy="10.5" r="2.3" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 19c0-2.9 2.2-5.2 5-5.2s5 2.3 5 5.2M14.5 19c0-2-1-3.8-2.6-4.8.6-.4 1.3-.6 2.1-.6 2.4 0 4.5 2.1 4.5 4.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </span>
+        <span class="promo-card__eyebrow promo-card__eyebrow--referral">Referral</span>
+        <h2 class="promo-card__title">Refer &amp; Earn 15%</h2>
+        <p class="promo-card__desc">Invite a friend — earn 15% of their subscription as USDT credit, paid the moment they activate the bot.</p>
+        <a href="/referrals" class="btn btn--primary btn--pill" data-action="promo:referral">Get Your Link</a>
+      </li>
+    </ul>
+  </main>
+
+  <!-- Same bottom nav as every other page. "Earn" stays highlighted here
+       since Promotion sits conceptually under Earn (matches reference
+       design) — see docs/INTEGRATION.md if that grouping changes. -->
+  <nav class="app-nav" aria-label="Primary">
+    <a href="/" class="app-nav__item" data-action="nav:home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9.5h12V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="markets.html" class="app-nav__item" data-action="nav:markets">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19V10M12 19V5M19 19v-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>Markets</span>
+    </a>
+    <a href="/trade" class="app-nav__item" data-action="nav:trade">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h13M17 7l-3-3M17 7l-3 3M20 17H7M7 17l3 3M7 17l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Trade</span>
+    </a>
+    <a href="/earn" class="app-nav__item is-active" data-action="nav:earn" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/><circle cx="15" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Earn</span>
+    </a>
+    <a href="/funds" class="app-nav__item" data-action="nav:funds">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="1.8" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 10h17" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Funds</span>
+    </a>
+  </nav>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
