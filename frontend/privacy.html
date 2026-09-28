@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FX Bot — Privacy &amp; Security</title>
+  <meta name="description" content="How FX Bot helps protect customer data and account information." />
+
+  <!-- Shares css/legal.css with terms.html and risk-disclosure.html — see their shipping notes. -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/markets.css" /> <!-- shared .page-header styles -->
+  <link rel="stylesheet" href="css/legal.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+
+  <script src="js/config.js"></script>
+</head>
+<body class="has-page-header">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="page-header">
+    <a href="/" class="page-header__back" data-action="nav:back" aria-label="Go back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <h1 class="page-header__title">Privacy &amp; Security</h1>
+  </header>
+
+  <main id="main" class="legal-page">
+
+    <p class="legal-meta">
+      <span data-brand-name>FX Bot</span> · Last updated <time datetime="2026-09-12">12 September 2026</time>
+    </p>
+
+    <p class="legal-intro">
+      Your privacy matters to us. This page summarizes the safeguards <span data-brand-name>FX Bot</span> uses
+      to help protect customer data and account information.
+    </p>
+
+    <section id="protecting-your-information">
+      <h2>1. Protecting your information</h2>
+      <ul>
+        <li>Encrypted connections — HTTPS helps protect information transmitted between your browser and our website.</li>
+        <li>Password protection — account passwords are stored as hashes rather than plain text.</li>
+        <li>Access controls — authentication and authorization checks restrict access to account information.</li>
+      </ul>
+    </section>
+
+    <section id="keeping-your-account-secure">
+      <h2>2. Keeping your account secure</h2>
+      <p>Choose a strong, unique password and keep your sign-in details and verification codes private. Sign out on shared devices. If you suspect unauthorized access, contact support promptly.</p>
+    </section>
+
+    <section id="security-limitations">
+      <h2>3. Security limitations</h2>
+      <p>No online service or storage system is completely secure. These safeguards help protect your information, but they cannot guarantee absolute security.</p>
+    </section>
+
+    <section id="privacy-and-security-support">
+      <h2>4. Privacy and security support</h2>
+      <p>
+        For questions about protecting your information or to report an account-security concern, contact us at
+        <a href="mailto:support@fx-bot.example">support@fx-bot.example</a>. Never include your password or
+        verification codes in a support message.
+      </p>
+    </section>
+
+  </main>
+
+  <nav class="app-nav" aria-label="Primary">
+    <a href="/" class="app-nav__item" data-action="nav:home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9.5h12V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="markets.html" class="app-nav__item" data-action="nav:markets">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19V10M12 19V5M19 19v-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>Markets</span>
+    </a>
+    <a href="/trade" class="app-nav__item" data-action="nav:trade">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h13M17 7l-3-3M17 7l-3 3M20 17H7M7 17l3 3M7 17l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Trade</span>
+    </a>
+    <a href="/earn" class="app-nav__item" data-action="nav:earn">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/><circle cx="15" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Earn</span>
+    </a>
+    <a href="/funds" class="app-nav__item" data-action="nav:funds">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="1.8" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 10h17" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Funds</span>
+    </a>
+  </nav>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
