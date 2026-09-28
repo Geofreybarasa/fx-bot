@@ -1,0 +1,39 @@
+/* ==========================================================================
+   Promotions page — styles specific to promotions.html.
+   Loaded after css/styles.css and css/markets.css (for shared
+   .page-header styles), so tokens from :root are already available.
+   ========================================================================== */
+
+.promotions-page { max-width: var(--page-max); margin: 0 auto; padding: 20px var(--pad-inline) 40px; }
+.promotions-intro { color: var(--text-dim); font-size: 14.5px; line-height: 1.6; max-width: 68ch; }
+
+.promo-list { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; }
+
+.promo-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 20px;
+}
+
+.promo-card__icon {
+  display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px;
+  background: var(--green-dim); color: var(--green); margin-bottom: 12px;
+}
+.promo-card__icon svg { width: 21px; height: 21px; }
+
+/* Every promo type shares the same green treatment by default; override
+   per-type below only if/when the product wants visual differentiation
+   (e.g. referral in a different accent). Kept as one system for now. */
+.promo-card__eyebrow {
+  display: block; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--green); margin-bottom: 4px;
+}
+
+.promo-card__title { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+.promo-card__desc { margin-top: 8px; color: var(--text-dim); font-size: 14px; line-height: 1.55; max-width: 62ch; }
+
+.promo-card .btn--pill { margin-top: 16px; padding: 10px 22px; }
+
+@media (min-width: 768px) {
+  .promo-list { display: grid; grid-template-columns: repeat(2, 1fr); align-items: start; }
+  .promo-card:first-child { grid-column: 1 / -1; } /* keep the flagship/active offer full-width, matches emphasis in reference design */
+}

@@ -1,0 +1,50 @@
+/* ==========================================================================
+   Legal / long-form content pages — Risk Disclosure, Terms, Privacy.
+   One shared stylesheet: these three pages are the same document
+   TYPE (heading + numbered sections + prose), so they share this file
+   instead of each getting their own near-identical CSS.
+   Loaded after css/styles.css and css/markets.css (for the shared
+   .page-header back-button styles).
+   ========================================================================== */
+
+.legal-page { max-width: 720px; margin: 0 auto; padding: 24px var(--pad-inline) 48px; }
+
+.legal-meta {
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-faint); margin-bottom: 14px;
+}
+
+.legal-intro { color: var(--text-dim); font-size: 15px; line-height: 1.6; margin-bottom: 28px; }
+
+.legal-page section { margin-bottom: 26px; }
+.legal-page h2 {
+  font-size: 16.5px; font-weight: 700; letter-spacing: -0.01em;
+  margin-bottom: 10px; scroll-margin-top: calc(var(--header-h) + 12px);
+}
+.legal-page p { color: var(--text-dim); font-size: 14.5px; line-height: 1.7; margin: 0 0 10px; }
+.legal-page p:last-child { margin-bottom: 0; }
+
+.legal-page ul {
+  margin: 10px 0 0; padding-left: 0; list-style: none;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.legal-page ul li {
+  position: relative; padding-left: 20px;
+  color: var(--text-dim); font-size: 14.5px; line-height: 1.65;
+}
+.legal-page ul li::before {
+  content: ''; position: absolute; left: 0; top: 9px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--green);
+}
+
+.legal-page hr {
+  border: none; border-top: 1px solid var(--border-soft); margin: 30px 0;
+}
+
+/* Simple key/value block — used by about.html's "Company details". */
+.legal-page dl {
+  display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; margin: 0;
+}
+.legal-page dt { color: var(--text-faint); font-size: 13px; font-weight: 600; }
+.legal-page dd { margin: 0; color: var(--text-dim); font-size: 14.5px; }
+.legal-page dd a { color: var(--green); font-weight: 600; }

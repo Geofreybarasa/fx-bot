@@ -1,0 +1,124 @@
+/* ==========================================================================
+   Auth pages (register.html, login.html) — shared styles.
+   Loaded after css/styles.css, so design tokens from :root are
+   already available. Deliberately reuses the same card/border/radius
+   language as the rest of the site rather than introducing a
+   separate visual system just for these two pages.
+   ========================================================================== */
+
+.auth-shell {
+  min-height: 100dvh;
+  padding: 24px var(--pad-inline) calc(48px + var(--safe-bottom));
+  padding-top: calc(24px + var(--safe-top));
+  display: flex; justify-content: center;
+}
+
+.auth-back {
+  position: fixed; top: calc(16px + var(--safe-top)); left: 16px; z-index: 50;
+  display: grid; place-items: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--bg-raised); border: 1px solid var(--border);
+  color: var(--text);
+}
+.auth-back svg { width: 18px; height: 18px; }
+
+.auth-card { width: 100%; max-width: 440px; }
+
+.auth-brand {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  margin-bottom: 22px;
+}
+.auth-brand__row { display: flex; align-items: center; gap: 10px; }
+.auth-brand__text { display: flex; flex-direction: column; line-height: 1.15; }
+.auth-brand__name { font-weight: 700; font-size: 15px; }
+.auth-brand__est { font-size: 10px; letter-spacing: 0.08em; color: var(--text-faint); }
+
+.auth-badge { display: flex; justify-content: center; margin-bottom: 18px; }
+
+.auth-title { text-align: center; font-size: clamp(24px, 5vw, 30px); font-weight: 800; letter-spacing: -0.01em; line-height: 1.15; }
+.auth-subtitle { text-align: center; color: var(--text-dim); font-size: 14px; margin-top: 8px; }
+
+.auth-form { margin-top: 28px; display: flex; flex-direction: column; gap: 18px; }
+
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field__label {
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-dim);
+}
+.field__required { color: var(--gold); margin-left: 2px; }
+
+.field__control {
+  position: relative; display: flex; align-items: center;
+  background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  transition: border-color .15s ease;
+}
+.field__control:focus-within { border-color: var(--green); }
+.field__control.has-error { border-color: var(--red); }
+
+.field__icon {
+  display: grid; place-items: center; width: 42px; height: 46px; flex: none; color: var(--text-faint);
+}
+.field__icon svg { width: 17px; height: 17px; }
+
+.field__input,
+.field__select {
+  width: 100%; height: 46px; padding: 0 14px 0 0;
+  background: transparent; border: 0; color: var(--text); font-size: 14.5px; font-family: var(--font-body);
+}
+.field__control > .field__icon + .field__input,
+.field__control > .field__icon + .field__select { padding-left: 0; }
+.field__input::placeholder { color: var(--text-faint); }
+.field__input:focus, .field__select:focus { outline: none; }
+
+.field__select { appearance: none; padding-right: 36px; cursor: pointer; }
+.field__select-chevron {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  width: 14px; height: 14px; color: var(--text-faint); pointer-events: none;
+}
+
+.field__toggle {
+  display: grid; place-items: center; width: 42px; height: 46px; flex: none; color: var(--text-faint);
+}
+.field__toggle svg { width: 18px; height: 18px; }
+.field__toggle.is-visible { color: var(--green); }
+
+.field__hint { font-size: 12px; color: var(--text-faint); line-height: 1.5; }
+.field-error { font-size: 12.5px; color: var(--red); min-height: 1em; }
+
+/* ---------- Password strength meter ---------- */
+.password-strength { display: flex; gap: 6px; }
+.password-strength__segment { height: 4px; flex: 1; border-radius: 2px; background: var(--border); transition: background-color .15s ease; }
+.password-strength__segment.is-weak { background: var(--red); }
+.password-strength__segment.is-medium { background: var(--gold); }
+.password-strength__segment.is-strong { background: var(--green); }
+
+/* ---------- Checkbox row (terms, remember-me) ---------- */
+.check-row { display: flex; align-items: flex-start; gap: 10px; }
+.check-row input[type="checkbox"] {
+  width: 20px; height: 20px; flex: none; margin-top: 1px;
+  accent-color: var(--green); cursor: pointer;
+}
+.check-row__text { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+.check-row__text a { color: var(--text); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.check-row--between { display: flex; align-items: center; justify-content: space-between; }
+
+.field-link { font-size: 13px; color: var(--green); font-weight: 600; }
+
+/* ---------- Form-level status message ---------- */
+.form-status { font-size: 13px; text-align: center; min-height: 1.2em; }
+.form-status.is-error { color: var(--red); }
+.form-status.is-success { color: var(--green); }
+
+/* ---------- Trust row + footer switch link ---------- */
+.auth-trust {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 18px; font-size: 12px; color: var(--text-faint);
+}
+.auth-trust svg { width: 14px; height: 14px; color: var(--green); }
+
+.auth-switch { text-align: center; margin-top: 16px; font-size: 13.5px; color: var(--text-dim); }
+.auth-switch a { color: var(--green); font-weight: 700; }
+
+@media (min-width: 640px) {
+  .auth-shell { align-items: center; }
+}
