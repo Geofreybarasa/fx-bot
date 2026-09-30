@@ -1,0 +1,68 @@
+<!-- =========================================================
+       FEEDBACK MODAL — opened by any [data-action="feedback:open"].
+       Behaviour: js/feedback.js · Styles: css/feedback.css
+       Submits POST {API_BASE_URL}/feedback (see docs/INTEGRATION.md).
+       ========================================================= -->
+  <dialog class="feedback-dialog" id="feedbackDialog" aria-labelledby="feedbackTitle" aria-describedby="feedbackLede">
+    <div class="feedback-dialog__inner">
+
+      <div class="feedback-dialog__header">
+        <h2 class="feedback-dialog__title" id="feedbackTitle">Send your feedback</h2>
+        <button type="button" class="feedback-dialog__close" data-feedback-close aria-label="Close feedback form">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <p class="feedback-dialog__lede" id="feedbackLede">Tell us about your experience. Your message goes straight to our team — it is not posted publicly.</p>
+
+      <form class="feedback-form" data-form="feedback" novalidate>
+
+        <fieldset class="rating" data-rating>
+          <legend class="feedback-label rating__legend">Your rating<span class="feedback-label__required" aria-hidden="true">*</span></legend>
+          <div class="rating__stars">
+            <label class="rating__star"><input class="rating__input" type="radio" name="rating" value="1" aria-label="1 star" /><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></label>
+            <label class="rating__star"><input class="rating__input" type="radio" name="rating" value="2" aria-label="2 stars" /><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></label>
+            <label class="rating__star"><input class="rating__input" type="radio" name="rating" value="3" aria-label="3 stars" /><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></label>
+            <label class="rating__star"><input class="rating__input" type="radio" name="rating" value="4" aria-label="4 stars" /><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></label>
+            <label class="rating__star"><input class="rating__input" type="radio" name="rating" value="5" aria-label="5 stars" /><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></label>
+          </div>
+          <p class="feedback-error" data-error-for="rating" role="alert"></p>
+        </fieldset>
+
+        <div class="feedback-field">
+          <label class="feedback-label" for="feedbackMessage">Your experience<span class="feedback-label__required" aria-hidden="true">*</span></label>
+          <textarea class="feedback-textarea" id="feedbackMessage" name="message" maxlength="2000" placeholder="What did you like? What could be better?" required aria-required="true"></textarea>
+          <span class="feedback-count"><span data-feedback-count>0</span>/2000</span>
+          <p class="feedback-error" data-error-for="message" role="alert"></p>
+        </div>
+
+        <div class="feedback-row">
+          <div class="feedback-field">
+            <label class="feedback-label" for="feedbackName">Name (optional)</label>
+            <input class="feedback-input" type="text" id="feedbackName" name="name" maxlength="80" placeholder="e.g. Alex M." autocomplete="name" />
+          </div>
+          <div class="feedback-field">
+            <label class="feedback-label" for="feedbackCountry">Country (optional)</label>
+            <input class="feedback-input" type="text" id="feedbackCountry" name="country" maxlength="80" placeholder="e.g. Spain" autocomplete="country-name" />
+          </div>
+        </div>
+
+        <!-- Honeypot: hidden from people, bots tend to fill it. Leave as-is. -->
+        <div class="feedback-hp" aria-hidden="true">
+          <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <button type="submit" class="btn btn--primary btn--lg">Send feedback</button>
+        <p class="feedback-status" data-form-status role="status"></p>
+      </form>
+
+      <div class="feedback-success" data-feedback-success tabindex="-1" hidden>
+        <div class="feedback-success__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><path d="m5 12.5 4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 class="feedback-success__title">Thank you!</h3>
+        <p class="feedback-success__text">Your feedback has gone straight to our team.</p>
+        <button type="button" class="btn btn--secondary btn--lg" data-feedback-close>Close</button>
+      </div>
+
+    </div>
+  </dialog>

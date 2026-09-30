@@ -26,6 +26,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/feedback.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
 
   <!-- Must load before ticker.js / main.js — see js/config.js -->
@@ -106,7 +107,7 @@
 
         <div class="hero__actions">
           <!-- data-action="account:open" → backend: send to KYC/onboarding flow -->
-          <a href="/register.html" class="btn btn--primary btn--lg" data-action="account:open">
+          <a href="register.html" class="btn btn--primary btn--lg" data-action="account:open">
             Open an Account
             <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 14 14 6M14 6H8M14 6v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
@@ -118,7 +119,7 @@
 
         <!-- Quick action shortcuts -->
         <nav class="quick-actions" aria-label="Quick links">
-          <a href="/promotions" class="quick-action" data-action="nav:promotions">
+          <a href="promotions.html" class="quick-action" data-action="nav:promotions">
             <span class="quick-action__icon-wrap">
               <span class="quick-action__badge">New</span>
               <svg class="quick-action__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v3M12 18v3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M3 12h3M18 12h3M4.9 19.1l2.1-2.1M17 7l2.1-2.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -137,7 +138,7 @@
             </span>
             <span>Economic Calendar</span>
           </a>
-          <a href="/webinars" class="quick-action" data-action="nav:webinar">
+          <a href="webinars.html" class="quick-action" data-action="nav:webinar">
             <span class="quick-action__icon-wrap">
               <svg class="quick-action__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="6.5" width="12" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><path d="M15.5 10.5 20 8v8l-4.5-2.5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
             </span>
@@ -154,7 +155,7 @@
       <div class="section__eyebrow">What the bot trades</div>
       <div class="section__header">
         <h2 id="markets-heading" class="section__title">Markets we trade</h2>
-        <a href="/markets" class="section__more" data-action="nav:markets">
+        <a href="markets.html" class="section__more" data-action="nav:markets">
           <span class="sr-only">See all markets</span>
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M7.5 4.5 13 10l-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
@@ -293,7 +294,7 @@
         </li>
       </ul>
 
-      <a href="/feedback" class="feedback-cta" data-action="nav:feedback">Send your feedback</a>
+      <a href="feedback-modal.html" class="feedback-cta" data-action="nav:feedback">Send your feedback</a>
     </section>
 
     <!-- =========================================================

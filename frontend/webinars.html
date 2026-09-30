@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FX Bot — Webinar</title>
+  <meta name="description" content="Live sessions and on-demand replays from the FX Bot team." />
+
+  <!--
+    ============================================================
+    SHIPPING NOTE FOR BACKEND TEAM — full guide: backend/docs/WEBINARS.md
+    ============================================================
+    This page is DATA-DRIVEN. js/webinars.js fetches
+      GET {API_BASE_URL}/webinars
+    and renders:
+      - the "No sessions scheduled right now" card below (the default,
+        and what shows when there are zero sessions or no API yet), or
+      - "Upcoming sessions" / "On-demand replays" cards once the backend
+        returns some. Nothing in this HTML needs editing to add a session.
+    Session cards link to login.html?redirect=/webinars/{id}, the same
+    pattern the Markets rows use — the actual join/replay page belongs
+    in the logged-in app, so no join links are exposed on this public page.
+    ============================================================
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/markets.css" /> <!-- shared .page-header styles -->
+  <link rel="stylesheet" href="css/webinars.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+
+  <!-- Without JS nothing can fetch sessions, so show the empty state instead of "loading…". -->
+  <noscript><style>.webinars-page[data-loading] .webinar-empty{display:block}.webinars-page[data-loading] .webinars-loading{display:none}</style></noscript>
+
+  <script src="js/config.js"></script>
+</head>
+<body class="has-page-header">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="page-header">
+    <a href="/" class="page-header__back" data-action="nav:back" aria-label="Go back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <h1 class="page-header__title">Webinar</h1>
+  </header>
+
+  <main id="main" class="webinars-page" data-loading>
+
+    <p class="webinars-intro">
+      Live sessions and on-demand replays from the <span data-brand-name>FX Bot</span> team.
+    </p>
+
+    <div data-webinar-content aria-live="polite">
+
+      <p class="webinars-loading">Loading sessions…</p>
+
+      <!-- Default state. js/webinars.js hides this when real sessions exist. -->
+      <div class="webinar-empty" data-webinar-empty>
+        <div class="webinar-empty__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/><path d="m10.3 8.9 5 3.1-5 3.1V8.9Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </div>
+        <h2 class="webinar-empty__title" data-webinar-title>No sessions scheduled right now</h2>
+        <p class="webinar-empty__text" data-webinar-text>We’re planning the next round of live walkthroughs and Q&amp;A sessions. Create an account to be notified when the schedule goes live.</p>
+        <a href="register.html" class="btn btn--primary btn--pill" data-action="account:open" data-webinar-cta>Create an Account</a>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Same bottom nav as every other page. No tab is highlighted: Webinar is
+       reached from the Home quick actions, not from a tab. -->
+  <nav class="app-nav" aria-label="Primary">
+    <a href="/" class="app-nav__item" data-action="nav:home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9.5h12V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="markets.html" class="app-nav__item" data-action="nav:markets">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19V10M12 19V5M19 19v-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>Markets</span>
+    </a>
+    <a href="/trade" class="app-nav__item" data-action="nav:trade">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h13M17 7l-3-3M17 7l-3 3M20 17H7M7 17l3 3M7 17l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Trade</span>
+    </a>
+    <a href="/earn" class="app-nav__item" data-action="nav:earn">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/><circle cx="15" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Earn</span>
+    </a>
+    <a href="/funds" class="app-nav__item" data-action="nav:funds">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="1.8" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 10h17" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Funds</span>
+    </a>
+  </nav>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/webinars.js" defer></script>
+</body>
+</html>

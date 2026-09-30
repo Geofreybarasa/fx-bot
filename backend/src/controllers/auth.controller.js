@@ -31,4 +31,21 @@ async function signOut(req, res) {
   res.status(204).end();
 }
 
-module.exports = { signIn, signOut };
+async function signUp(req, res, next) {
+  try {
+    const { fullName, email, password, countryCode, currency, referralCode } = req.body;
+    const result = await authService.createAccount({
+      fullName,
+      email,
+      password,
+      countryCode,
+      currency,
+      referralCode: referralCode || null
+    });
+    res.status(201).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+module.exports = { signIn, signOut, signUp };

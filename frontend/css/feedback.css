@@ -1,0 +1,115 @@
+/* ==========================================================================
+   Feedback modal — styles for the <dialog id="feedbackDialog"> on index.html.
+   Loaded after css/styles.css (uses its :root tokens). Every class is
+   namespaced .feedback-* / .rating-* so it can't collide with auth.css
+   or anything else on the page.
+   ========================================================================== */
+
+/* The homepage trigger was an <a>; it's a <button> now, so give it the
+   same look as the .feedback-cta link style in styles.css. */
+button.feedback-cta {
+  width: 100%; background: transparent; font: inherit; font-size: 14px;
+  font-weight: 600; cursor: pointer;
+}
+button.feedback-cta:hover { border-color: #2a3444; }
+
+/* Stops the page behind the modal from scrolling while it's open. */
+body.has-modal { overflow: hidden; }
+
+/* ---------- Dialog shell ---------- */
+.feedback-dialog {
+  width: min(480px, calc(100vw - 24px));
+  max-height: min(92dvh, 760px);
+  margin: auto;
+  padding: 0;
+  overflow-y: auto;
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.feedback-dialog::backdrop {
+  background: rgba(2, 4, 8, 0.72);
+  backdrop-filter: blur(4px);
+}
+.feedback-dialog[open] { animation: feedback-in .18s ease-out; }
+@keyframes feedback-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+.feedback-dialog__inner { padding: 22px 22px 24px; }
+
+.feedback-dialog__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.feedback-dialog__title { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+.feedback-dialog__close {
+  display: grid; place-items: center; width: 32px; height: 32px; flex: none;
+  margin: -4px -6px 0 0; border-radius: 50%; color: var(--text-dim);
+  background: transparent; border: 0; cursor: pointer;
+}
+.feedback-dialog__close:hover { color: var(--text); background: var(--bg-raised); }
+.feedback-dialog__close svg { width: 18px; height: 18px; }
+.feedback-dialog__lede { margin-top: 8px; color: var(--text-dim); font-size: 14px; line-height: 1.55; }
+
+/* ---------- Form ---------- */
+.feedback-form { margin-top: 20px; display: flex; flex-direction: column; gap: 18px; }
+.feedback-form[hidden], .feedback-success[hidden] { display: none; }
+
+.feedback-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.feedback-label { font-size: 13px; font-weight: 600; color: var(--text-dim); }
+.feedback-label__required { color: var(--gold); margin-left: 2px; }
+.feedback-error { margin: 0; min-height: 1em; font-size: 12.5px; color: var(--red); }
+
+.feedback-textarea,
+.feedback-input {
+  width: 100%; background: var(--bg); color: var(--text);
+  border: 1px solid var(--border); border-radius: 12px;
+  font-family: var(--font-body); font-size: 14.5px;
+  transition: border-color .15s ease;
+}
+.feedback-textarea { min-height: 120px; padding: 12px 14px; resize: vertical; line-height: 1.5; }
+.feedback-input { height: 46px; padding: 0 14px; }
+.feedback-textarea::placeholder,
+.feedback-input::placeholder { color: var(--text-faint); }
+.feedback-textarea:focus, .feedback-input:focus { outline: none; border-color: var(--green); }
+.feedback-textarea.has-error { border-color: var(--red); }
+
+.feedback-count { align-self: flex-end; font-size: 12px; color: var(--text-faint); }
+
+.feedback-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 380px) { .feedback-row { grid-template-columns: 1fr; } }
+
+/* ---------- Star rating ---------- */
+.rating { border: 0; margin: 0; padding: 0; min-width: 0; }
+.rating__legend { padding: 0; margin-bottom: 6px; }
+.rating__stars { display: flex; gap: 6px; margin-left: -4px; }
+.rating__star {
+  position: relative; display: grid; place-items: center; padding: 4px;
+  color: #2a3444; cursor: pointer; border-radius: 8px;
+  transition: color .12s ease, transform .12s ease;
+}
+.rating__star:hover { transform: scale(1.08); }
+.rating__star svg { width: 30px; height: 30px; fill: none; }
+.rating__star.is-active { color: var(--gold); }
+.rating__star.is-active svg { fill: currentColor; }
+.rating__star:has(:focus-visible) { outline: 2px solid var(--green); outline-offset: 2px; }
+/* Real radio inputs stay in the DOM for keyboard/screen-reader use,
+   just visually hidden (arrow keys move between stars natively). */
+.rating__input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+
+/* ---------- Honeypot (spam trap) — invisible to people, tempting to bots ---------- */
+.feedback-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+/* ---------- Status + success ---------- */
+.feedback-status { margin: 0; min-height: 1.2em; font-size: 13px; text-align: center; }
+.feedback-status.is-error { color: var(--red); }
+
+.feedback-success { margin-top: 24px; text-align: center; padding: 8px 0 4px; }
+.feedback-success:focus { outline: none; }
+.feedback-success__icon {
+  display: grid; place-items: center; width: 52px; height: 52px; margin: 0 auto 14px;
+  border-radius: 50%; background: var(--green-dim); color: var(--green);
+}
+.feedback-success__icon svg { width: 26px; height: 26px; }
+.feedback-success__title { font-size: 18px; font-weight: 700; }
+.feedback-success__text { margin: 8px 0 20px; color: var(--text-dim); font-size: 14px; line-height: 1.55; }

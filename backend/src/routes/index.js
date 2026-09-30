@@ -2,6 +2,8 @@ const express = require('express');
 const authRoutes = require('./auth.routes');
 const accountRoutes = require('./account.routes');
 const marketsRoutes = require('./markets.routes');
+const feedbackRoutes = require('./feedback.routes');
+const webinarsRoutes = require('./webinars.routes');
 
 const router = express.Router();
 
@@ -9,6 +11,8 @@ const router = express.Router();
 router.use('/auth', authRoutes);
 router.use('/account', accountRoutes);
 router.use('/markets', marketsRoutes);
+router.use('/feedback', feedbackRoutes);
+router.use('/webinars', webinarsRoutes);
 
 router.get('/health', (req, res) => res.json({ status: 'ok' }));
 

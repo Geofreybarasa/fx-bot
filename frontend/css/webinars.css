@@ -1,0 +1,67 @@
+/* ==========================================================================
+   Webinar page — styles specific to webinars.html.
+   Loaded after css/styles.css and css/markets.css (for the shared
+   .page-header styles), so :root tokens are already available.
+   ========================================================================== */
+
+.webinars-page { max-width: var(--page-max); margin: 0 auto; padding: 20px var(--pad-inline) 48px; }
+.webinars-intro { color: var(--text-dim); font-size: 14.5px; line-height: 1.6; max-width: 68ch; margin-bottom: 18px; }
+
+/* While js/webinars.js is asking the backend for sessions, show a
+   placeholder instead of flashing "No sessions" and then swapping it out.
+   (webinars.html has a <noscript> override so no-JS visitors still see
+   the empty state.) */
+.webinars-loading { display: none; color: var(--text-faint); font-size: 14px; padding: 24px 0; }
+.webinars-page[data-loading] .webinars-loading { display: block; }
+.webinars-page[data-loading] .webinar-empty { display: none; }
+
+/* ---------- Empty / error state card ---------- */
+.webinar-empty {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 34px 24px 32px; text-align: center;
+}
+.webinar-empty[hidden] { display: none; }
+.webinar-empty__icon {
+  display: grid; place-items: center; width: 48px; height: 48px; margin: 0 auto 16px;
+  border-radius: 12px; background: var(--green-dim); color: var(--green);
+}
+.webinar-empty__icon svg { width: 24px; height: 24px; }
+.webinar-empty__title { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; }
+.webinar-empty__text { margin: 10px auto 0; max-width: 58ch; color: var(--text-dim); font-size: 14px; line-height: 1.6; }
+.webinar-empty .btn--pill { margin-top: 20px; padding: 11px 24px; }
+
+/* ---------- Session lists ---------- */
+.webinar-section { margin-top: 26px; }
+.webinar-section:first-child { margin-top: 0; }
+.webinar-section__title { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+
+.session-list { display: flex; flex-direction: column; gap: 12px; }
+
+.session-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 18px 20px;
+}
+.session-card__meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 10px; }
+.session-card__when { font-size: 13px; color: var(--text-dim); }
+.session-card__title { font-size: 16.5px; font-weight: 700; letter-spacing: -0.01em; }
+.session-card__desc { margin-top: 6px; color: var(--text-dim); font-size: 14px; line-height: 1.55; max-width: 62ch; }
+.session-card__host { margin-top: 8px; font-size: 12.5px; color: var(--text-faint); }
+.session-card .btn--pill { margin-top: 14px; padding: 10px 22px; }
+
+.session-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  background: var(--bg-raised); color: var(--text-dim); border: 1px solid var(--border);
+}
+.session-badge--upcoming { color: var(--green); background: var(--green-dim); border-color: transparent; }
+.session-badge--live { color: #04120d; background: var(--green); border-color: transparent; }
+.session-badge--live::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+  animation: live-pulse-dot 1.4s ease-in-out infinite;
+}
+@keyframes live-pulse-dot { 50% { opacity: 0.35; } }
+
+@media (min-width: 768px) {
+  .session-list { display: grid; grid-template-columns: repeat(2, 1fr); align-items: start; }
+}
