@@ -2,7 +2,7 @@
   "name": "fx-bot-backend",
   "version": "0.1.0",
   "private": true,
-  "description": "API + WebSocket backend for fx-bot (working name — client will rename before launch).",
+  "description": "API + WebSocket backend for fx-bot (working name \u2014 client will rename before launch).",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {
@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.2",
     "pino": "^9.3.2",
     "pino-http": "^10.2.0",
+    "rss-parser": "^3.13.0",
     "ws": "^8.18.0",
     "zod": "^3.23.8"
   },

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FX Bot — News</title>
+  <meta name="description" content="Live headlines from trusted crypto and forex publishers." />
+
+  <!--
+    ============================================================
+    SHIPPING NOTE FOR BACKEND TEAM — see backend/src/services/news.service.js
+    ============================================================
+    This page is entirely data-driven from js/news.js, which fetches:
+      GET {API_BASE_URL}/news           → merged, sorted headlines
+      GET {API_BASE_URL}/news/sources   → filter-pill list (incl. ForexFactory)
+    Every headline links to the ORIGINAL article on the publisher's own
+    site (target="_blank", rel="noopener noreferrer") — this page never
+    shows full article text, only a short excerpt, by design.
+
+    ForexFactory has no working RSS/API (its rss.php 404s) so it is NOT
+    pulled as a feed. It renders as a single "Visit ForexFactory" card
+    that links out — see news.service.js's file header for the full
+    reasoning and what to do if that ever changes.
+    ============================================================
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/markets.css" /> <!-- shared .page-header + .filter-pill styles -->
+  <link rel="stylesheet" href="css/news.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+
+  <script src="js/config.js"></script>
+</head>
+<body class="has-page-header">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="page-header">
+    <a href="/" class="page-header__back" data-action="nav:back" aria-label="Go back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <h1 class="page-header__title">News</h1>
+  </header>
+
+  <main id="main" class="news-page">
+
+    <div class="news-status">
+      <span class="news-status__live"><span class="live-status__dot" aria-hidden="true"></span>Live</span>
+      <p class="news-status__text">
+        Real market headlines · refreshed every <span data-refresh-minutes>5</span> min · <span data-updated-label>updated just now</span>
+      </p>
+    </div>
+
+    <div data-news-content aria-live="polite">
+      <p class="news-loading">Loading headlines…</p>
+    </div>
+
+  </main>
+
+  <nav class="app-nav" aria-label="Primary">
+    <a href="/" class="app-nav__item" data-action="nav:home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9.5h12V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="markets.html" class="app-nav__item" data-action="nav:markets">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19V10M12 19V5M19 19v-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>Markets</span>
+    </a>
+    <a href="/trade" class="app-nav__item" data-action="nav:trade">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h13M17 7l-3-3M17 7l-3 3M20 17H7M7 17l3 3M7 17l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Trade</span>
+    </a>
+    <a href="/earn" class="app-nav__item" data-action="nav:earn">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/><circle cx="15" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Earn</span>
+    </a>
+    <a href="/funds" class="app-nav__item" data-action="nav:funds">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="1.8" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 10h17" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Funds</span>
+    </a>
+  </nav>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/news.js" defer></script>
+</body>
+</html>
