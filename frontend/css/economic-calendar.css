@@ -1,0 +1,166 @@
+/* Economic Calendar page — loads AFTER css/styles.css.
+   Uses its own --ec-* tokens (with fallbacks) so it never depends on
+   the exact variable names in styles.css. Tweak the palette here. */
+
+.ec-page {
+  --ec-bg: #070b14;
+  --ec-surface: #0d1320;
+  --ec-border: #1a2236;
+  --ec-text: #ffffff;
+  --ec-muted: #5f7096;
+  --ec-accent: #1fd69a;
+  --ec-accent-bg: rgba(31, 214, 154, 0.12);
+  --ec-high: #ff5d6c;
+  --ec-med: #f5a524;
+  --ec-low: #5f7096;
+
+  margin: 0;
+  background: var(--ec-bg);
+  color: var(--ec-text);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  min-height: 100%;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); /* room for .app-nav */
+}
+
+@media (prefers-color-scheme: light) {
+  /* The product is dark-only; keep it consistent in every viewer. */
+  .ec-page { color-scheme: dark; }
+}
+
+/* ---------- Header ---------- */
+.ec-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--ec-border);
+}
+.ec-back {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--ec-surface);
+  color: var(--ec-text);
+  text-decoration: none;
+}
+.ec-back svg { width: 20px; height: 20px; }
+.ec-header__title { margin: 0; font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; }
+
+/* ---------- Main ---------- */
+.ec-main { max-width: 960px; margin: 0 auto; padding: 14px 16px 24px; }
+
+.ec-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border: 1px solid var(--ec-border);
+  border-radius: 12px;
+  background: var(--ec-surface);
+  font-size: 0.78rem;
+  color: var(--ec-muted);
+}
+.ec-status__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--ec-accent-bg);
+  color: var(--ec-accent);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.ec-status__dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.ec-status__pill.is-offline { background: rgba(255, 93, 108, 0.12); color: var(--ec-high); }
+
+.ec-lede { margin: 14px 0 12px; font-size: 0.86rem; color: var(--ec-muted); line-height: 1.5; }
+
+/* ---------- Filter chips ---------- */
+.ec-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+.ec-chip {
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ec-text);
+  background: transparent;
+  border: 1px solid var(--ec-border);
+  border-radius: 999px;
+  padding: 7px 16px;
+  cursor: pointer;
+}
+.ec-chip.is-active { color: var(--ec-accent); border-color: var(--ec-accent); }
+.ec-chip:focus-visible,
+.ec-back:focus-visible { outline: 2px solid var(--ec-accent); outline-offset: 2px; }
+
+/* ---------- Card / states ---------- */
+.ec-card {
+  border: 1px solid var(--ec-border);
+  border-radius: 18px;
+  background: var(--ec-surface);
+  padding: 22px 18px;
+  min-height: 106px;
+}
+.ec-card__icon { display: block; width: 26px; height: 26px; color: var(--ec-muted); margin-bottom: 6px; }
+.ec-card.has-events .ec-card__icon { display: none; }
+.ec-card.has-events { padding: 6px 0; }
+
+.ec-empty { margin: 8px 0 4px; text-align: center; color: var(--ec-muted); font-size: 0.88rem; }
+.ec-retry {
+  display: block; margin: 12px auto 0; font: inherit; font-size: 0.8rem; font-weight: 600;
+  color: var(--ec-accent); background: none; border: 1px solid var(--ec-accent);
+  border-radius: 999px; padding: 6px 14px; cursor: pointer;
+}
+
+/* ---------- Event list ---------- */
+.ec-day {
+  margin: 0;
+  padding: 12px 18px 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ec-muted);
+}
+.ec-list { list-style: none; margin: 0; padding: 0; }
+.ec-event {
+  display: grid;
+  grid-template-columns: 52px 44px 1fr;
+  gap: 4px 12px;
+  align-items: center;
+  padding: 11px 18px;
+  border-top: 1px solid var(--ec-border);
+}
+.ec-event__time { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 0.78rem; font-weight: 600; }
+.ec-event__ccy {
+  justify-self: start;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(95, 112, 150, 0.16);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.ec-event__title { display: flex; align-items: center; gap: 8px; font-size: 0.86rem; font-weight: 600; min-width: 0; }
+.ec-impact { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--ec-low); }
+.ec-impact--high { background: var(--ec-high); }
+.ec-impact--medium { background: var(--ec-med); }
+.ec-event__nums {
+  grid-column: 3;
+  display: flex; gap: 14px;
+  font-size: 0.72rem; color: var(--ec-muted);
+}
+.ec-event__nums b { color: var(--ec-text); font-weight: 600; }
+
+.ec-foot { margin: 14px 0 0; text-align: center; font-size: 0.72rem; color: var(--ec-muted); }
+
+@media (min-width: 720px) {
+  .ec-event { grid-template-columns: 64px 56px 1fr auto; }
+  .ec-event__nums { grid-column: 4; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ec-page * { scroll-behavior: auto !important; transition: none !important; }
+}
