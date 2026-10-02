@@ -37,21 +37,24 @@
       id: 'demo:1', source: 'cointelegraph', sourceName: 'Cointelegraph', sourceUrl: 'https://cointelegraph.com',
       category: 'Bitcoin', title: "Here's what happened in crypto today",
       summary: "Need to know what happened in crypto today? Here is the latest news on daily trends and events impacting Bitcoin price, blockchain, DeFi, Web3 and NFTs.",
-      url: 'https://cointelegraph.com', publishedAt: new Date(Date.now() - 30 * 60000).toISOString(),
+      author: 'Helen Partz',
+      url: 'https://cointelegraph.com', publishedAt: new Date(Date.now() - 19 * 3600000).toISOString(),
       imageUrl: null
     },
     {
-      id: 'demo:2', source: 'decrypt', sourceName: 'Decrypt', sourceUrl: 'https://decrypt.co',
+      id: 'demo:2', source: 'actionforex', sourceName: 'ActionForex', sourceUrl: 'https://www.actionforex.com',
+      category: 'Gold', title: 'Gold breaks key resistance as Dollar Index holds support',
+      summary: 'Gold pushes through its recent range high even as the Dollar Index steadies, with the Fed\u2019s next rate signal likely to decide which side breaks.',
+      author: 'ActionForex',
+      url: 'https://www.actionforex.com', publishedAt: new Date(Date.now() - 2 * 3600000).toISOString(),
+      imageUrl: null
+    },
+    {
+      id: 'demo:3', source: 'decrypt', sourceName: 'Decrypt', sourceUrl: 'https://decrypt.co',
       category: 'Markets', title: 'Ether holds steady as traders eye the next move',
       summary: 'Analysts point to key support levels as ETH consolidates after a volatile week of trading.',
-      url: 'https://decrypt.co', publishedAt: new Date(Date.now() - 2 * 3600000).toISOString(),
-      imageUrl: null
-    },
-    {
-      id: 'demo:3', source: 'bitcoinmagazine', sourceName: 'Bitcoin Magazine', sourceUrl: 'https://bitcoinmagazine.com',
-      category: 'Mining', title: 'Mining difficulty adjusts as network hash rate climbs',
-      summary: 'The latest difficulty epoch reflects continued growth in global mining capacity.',
-      url: 'https://bitcoinmagazine.com', publishedAt: new Date(Date.now() - 5 * 3600000).toISOString(),
+      author: null,
+      url: 'https://decrypt.co', publishedAt: new Date(Date.now() - 5 * 3600000).toISOString(),
       imageUrl: null
     }
   ];
@@ -92,8 +95,14 @@
     img.src = item.imageUrl;
     img.alt = '';
     img.loading = 'lazy';
-    img.referrerPolicy = 'no-referrer';
-    // If the image 404s or the host blocks hotlinking, drop back to the
+    // NOTE: do NOT set referrerPolicy="no-referrer" here. Several
+    // publisher CDNs (Cointelegraph included) use hotlink protection that
+    // checks the Referer header and silently reject the image request
+    // when it's stripped — this was the actual cause of images not
+    // showing. Leave the browser's default (strict-origin-when-cross-origin),
+    // which still protects the full URL/query string while remaining
+    // compatible with these CDNs.
+    // If the image 404s or a host still blocks it, drop back to the
     // plain icon instead of showing a broken-image glyph.
     img.addEventListener('error', function () {
       wrap.classList.add('news-card__media--fallback');
@@ -117,16 +126,30 @@
     var body = el('div', 'news-card__body');
     var meta = el('div', 'news-card__meta');
     meta.appendChild(el('span', 'news-card__category', item.category || item.sourceName));
-    meta.appendChild(el('time', 'news-card__time', formatRelative(item.publishedAt)));
     body.appendChild(meta);
 
     body.appendChild(el('h2', 'news-card__title', item.title));
     if (item.summary) body.appendChild(el('p', 'news-card__summary', item.summary));
 
-    var source = el('span', 'news-card__source');
-    source.innerHTML = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 14 14 6M14 6H8M14 6v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    source.appendChild(document.createTextNode(item.sourceName || hostnameOf(item.url)));
-    body.appendChild(source);
+    // Byline row: a real reporter's name when the feed gives one (e.g.
+    // "Helen Partz"), otherwise the publication itself — either way,
+    // paired with the relative time, matching the reference design.
+    var sourceName = item.sourceName || hostnameOf(item.url);
+    var byline = item.author && item.author.toLowerCase() !== sourceName.toLowerCase() ? item.author : sourceName;
+    var authorRow = el('p', 'news-card__author');
+    authorRow.appendChild(el('span', 'news-card__author-name', byline));
+    authorRow.appendChild(document.createTextNode(' '));
+    authorRow.appendChild(el('time', 'news-card__time', formatRelative(item.publishedAt)));
+    body.appendChild(authorRow);
+
+    // Only add a separate "via {source}" line when the byline above was a
+    // real person — otherwise it would just repeat the same name twice.
+    if (byline !== sourceName) {
+      var source = el('span', 'news-card__source');
+      source.innerHTML = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6 14 14 6M14 6H8M14 6v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      source.appendChild(document.createTextNode('via ' + sourceName));
+      body.appendChild(source);
+    }
 
     card.appendChild(body);
     return card;

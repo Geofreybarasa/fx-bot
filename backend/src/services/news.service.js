@@ -7,9 +7,15 @@
  * article text, only short attributed excerpts.
  *
  * SOURCES BELOW WERE VERIFIED LIVE BEFORE THIS WAS WRITTEN:
- *   - Cointelegraph   https://cointelegraph.com/rss    (official, updates hourly)
- *   - Decrypt         https://decrypt.co/feed           (official, updates hourly)
- *   - Bitcoin Magazine https://bitcoinmagazine.com/feed  (official, updates hourly)
+ *   - Cointelegraph   https://cointelegraph.com/rss                                  (official, crypto, updates hourly)
+ *   - Decrypt         https://decrypt.co/feed                                        (official, crypto, updates hourly)
+ *   - Bitcoin Magazine https://bitcoinmagazine.com/feed                              (official, crypto, updates hourly)
+ *   - ActionForex     https://www.actionforex.com/category/action-insight/market-overview/feed/
+ *     (official, FX + Gold + Silver — exactly the asset classes this site trades
+ *     outside crypto. ActionForex's own RSS terms explicitly permit this: free
+ *     redistribution of headlines/excerpts is allowed provided the platform
+ *     links straight back to the full article, which is exactly what this page
+ *     does — see https://www.actionforex.com/general/forex-rss-feeds/)
  *
  * ForexFactory is deliberately NOT pulled as a feed:
  *   - Its RSS endpoint (forexfactory.com/rss.php) returns 404 today —
@@ -51,15 +57,20 @@ const parser = new Parser({
     item: [
       ['media:content', 'mediaContent', { keepArray: true }],
       ['media:thumbnail', 'mediaThumbnail'],
-      ['content:encoded', 'contentEncoded']
+      ['content:encoded', 'contentEncoded'],
+      ['dc:creator', 'dcCreator']
     ]
   }
 });
 
 const CACHE_TTL_MINUTES = 5;
 const CACHE_TTL_MS = CACHE_TTL_MINUTES * 60 * 1000; // feeds themselves say they update hourly
-const MAX_ITEMS = 30;
+const MAX_ITEMS = 40;
 const MAX_SUMMARY_LENGTH = 220;
+// "we collect and post trending news mostly within 24hrs" — only show
+// headlines published in roughly the last day. Items with no parseable
+// date are kept (can't prove they're stale) rather than silently dropped.
+const MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
 /** @typedef {{ id: string, name: string, feedUrl: string, siteUrl: string }} FeedSource */
 
@@ -67,7 +78,8 @@ const MAX_SUMMARY_LENGTH = 220;
 const LIVE_SOURCES = [
   { id: 'cointelegraph', name: 'Cointelegraph', feedUrl: 'https://cointelegraph.com/rss', siteUrl: 'https://cointelegraph.com' },
   { id: 'decrypt', name: 'Decrypt', feedUrl: 'https://decrypt.co/feed', siteUrl: 'https://decrypt.co' },
-  { id: 'bitcoinmagazine', name: 'Bitcoin Magazine', feedUrl: 'https://bitcoinmagazine.com/feed', siteUrl: 'https://bitcoinmagazine.com' }
+  { id: 'bitcoinmagazine', name: 'Bitcoin Magazine', feedUrl: 'https://bitcoinmagazine.com/feed', siteUrl: 'https://bitcoinmagazine.com' },
+  { id: 'actionforex', name: 'ActionForex', feedUrl: 'https://www.actionforex.com/category/action-insight/market-overview/feed/', siteUrl: 'https://www.actionforex.com' }
 ];
 
 /** Sources shown on the page that are NOT pulled as a feed — see file header. */
@@ -126,6 +138,13 @@ function normalizeItem(source, rawItem) {
   const publishedAt = rawItem.isoDate || (rawItem.pubDate ? new Date(rawItem.pubDate).toISOString() : null);
   const summarySource = rawItem.contentSnippet || rawItem.summary || rawItem.description || '';
 
+  // Byline: real reporter name when the feed gives one (e.g. Cointelegraph's
+  // dc:creator / rss-parser's default `creator`/`author` mapping). Some
+  // feeds (ActionForex) only ever credit the publication itself — that's
+  // still "a creator", just not a distinct person, so the frontend decides
+  // whether it's worth showing separately from sourceName.
+  const author = stripHtml(rawItem.dcCreator || rawItem.creator || rawItem.author || '') || null;
+
   return {
     id: `${source.id}:${rawItem.guid || rawItem.link}`,
     source: source.id,
@@ -134,17 +153,23 @@ function normalizeItem(source, rawItem) {
     category: extractCategory(rawItem, source.name),
     title: stripHtml(rawItem.title || 'Untitled'),
     summary: truncate(stripHtml(summarySource), MAX_SUMMARY_LENGTH),
+    author,
     url: rawItem.link,
     publishedAt,
     imageUrl: extractImage(rawItem)
   };
 }
 
-/** Merges already-normalized items from multiple sources, newest first, capped. */
-function mergeAndSort(itemLists, limit = MAX_ITEMS) {
+/**
+ * Merges already-normalized items from multiple sources: drops anything
+ * incomplete or older than MAX_AGE_MS (see its definition for the "no
+ * date = keep it" reasoning), newest first, capped at `limit`.
+ */
+function mergeAndSort(itemLists, limit = MAX_ITEMS, now = Date.now()) {
   return itemLists
     .flat()
     .filter((item) => item.url && item.title)
+    .filter((item) => !item.publishedAt || now - new Date(item.publishedAt).getTime() <= MAX_AGE_MS)
     .sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0))
     .slice(0, limit);
 }
