@@ -64,19 +64,42 @@ test('normalizeItem falls back to the first <img> in content:encoded', () => {
   assert.strictEqual(item.imageUrl, 'https://example.com/body.png');
 });
 
-test('mergeAndSort orders newest-first across sources and drops incomplete items', () => {
-  const a = [{ title: 'Old', url: 'https://a.example/1', publishedAt: '2026-09-01T00:00:00Z' }];
-  const b = [
-    { title: 'New', url: 'https://b.example/1', publishedAt: '2026-09-29T00:00:00Z' },
-    { title: 'No URL', url: null, publishedAt: '2026-09-30T00:00:00Z' } // must be dropped
+test('normalizeItem captures the byline from dc:creator', () => {
+  const item = normalizeItem(SOURCE, { link: 'https://cointelegraph.com/v', dcCreator: 'Helen Partz' });
+  assert.strictEqual(item.author, 'Helen Partz');
+});
+
+test('normalizeItem has no author when the feed gives none', () => {
+  const item = normalizeItem(SOURCE, { link: 'https://cointelegraph.com/u' });
+  assert.strictEqual(item.author, null);
+});
+
+test('mergeAndSort drops items older than 24 hours but keeps undated ones', () => {
+  const now = new Date('2026-10-01T12:00:00Z').getTime();
+  const items = [
+    { title: 'Fresh', url: 'https://a.example/1', publishedAt: new Date(now - 2 * 3600000).toISOString() },
+    { title: 'Stale', url: 'https://a.example/2', publishedAt: new Date(now - 30 * 3600000).toISOString() },
+    { title: 'No date', url: 'https://a.example/3', publishedAt: null }
   ];
-  const merged = mergeAndSort([a, b]);
+  const result = mergeAndSort([items], 10, now);
+  assert.deepStrictEqual(result.map((i) => i.title).sort(), ['Fresh', 'No date']);
+});
+
+test('mergeAndSort orders newest-first across sources and drops incomplete items', () => {
+  const now = new Date('2026-09-30T00:00:00Z').getTime();
+  const a = [{ title: 'Old', url: 'https://a.example/1', publishedAt: '2026-09-29T10:00:00Z' }];
+  const b = [
+    { title: 'New', url: 'https://b.example/1', publishedAt: '2026-09-29T20:00:00Z' },
+    { title: 'No URL', url: null, publishedAt: '2026-09-29T23:00:00Z' } // must be dropped
+  ];
+  const merged = mergeAndSort([a, b], 40, now);
   assert.deepStrictEqual(merged.map((i) => i.title), ['New', 'Old']);
 });
 
 test('mergeAndSort respects the limit', () => {
+  const now = new Date('2026-01-01T12:00:00Z').getTime();
   const many = Array.from({ length: 40 }, (_, i) => ({
-    title: `Item ${i}`, url: `https://a.example/${i}`, publishedAt: new Date(2026, 0, i + 1).toISOString()
+    title: `Item ${i}`, url: `https://a.example/${i}`, publishedAt: new Date(now - i * 3600000).toISOString()
   }));
-  assert.strictEqual(mergeAndSort([many], 10).length, 10);
+  assert.strictEqual(mergeAndSort([many], 10, now).length, 10);
 });
