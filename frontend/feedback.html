@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FX Bot — Send your feedback</title>
+  <meta name="description" content="Tell the FX Bot team about your experience." />
+
+  <!--
+    ============================================================
+    SHIPPING NOTE FOR BACKEND TEAM
+    ============================================================
+    Standalone page (no modal/<dialog> — simpler and more reliable
+    across browsers). Submits POST {API_BASE_URL}/feedback with:
+      { rating: 1-5, message: string, name: string|null, country: string|null }
+    Backend: backend/src/routes/feedback.routes.js (already built,
+    validates independently — checks here are UX only).
+    Feedback is PRIVATE ("not posted publicly") — see
+    backend/src/services/feedback.service.js before ever surfacing
+    any of this on the public reviews section.
+    ============================================================
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/markets.css" /> <!-- shared .page-header styles -->
+  <link rel="stylesheet" href="css/feedback.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+
+  <script src="js/config.js"></script>
+</head>
+<body class="has-page-header">
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="page-header">
+    <a href="/" class="page-header__back" data-action="nav:back" aria-label="Go back">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <h1 class="page-header__title">Send your feedback</h1>
+  </header>
+
+  <main id="main" class="feedback-page">
+
+    <p class="feedback-lede">Tell us about your experience. Your message goes straight to our team — it is not posted publicly.</p>
+
+    <form class="feedback-form" data-form="feedback" novalidate>
+
+      <fieldset class="rating" data-rating>
+        <legend class="feedback-label rating__legend">Your rating<span class="feedback-label__required" aria-hidden="true">*</span></legend>
+        <div class="rating__stars">
+          <label class="rating__star"><input class="rating__input" type="radio" name="rating" value="1" aria-label="1 star" /><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></label>
+          <label class="rating__star"><input class="rating__input" type="radio" name="rating" value="2" aria-label="2 stars" /><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></label>
+          <label class="rating__star"><input class="rating__input" type="radio" name="rating" value="3" aria-label="3 stars" /><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></label>
+          <label class="rating__star"><input class="rating__input" type="radio" name="rating" value="4" aria-label="4 stars" /><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></label>
+          <label class="rating__star"><input class="rating__input" type="radio" name="rating" value="5" aria-label="5 stars" /><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8L12 3.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></label>
+        </div>
+        <p class="feedback-error" data-error-for="rating" role="alert"></p>
+      </fieldset>
+
+      <div class="feedback-field">
+        <label class="feedback-label" for="feedbackMessage">Your experience<span class="feedback-label__required" aria-hidden="true">*</span></label>
+        <textarea class="feedback-textarea" id="feedbackMessage" name="message" maxlength="2000" placeholder="What did you like? What could be better?" required aria-required="true"></textarea>
+        <span class="feedback-count"><span data-feedback-count>0</span>/2000</span>
+        <p class="feedback-error" data-error-for="message" role="alert"></p>
+      </div>
+
+      <div class="feedback-row">
+        <div class="feedback-field">
+          <label class="feedback-label" for="feedbackName">Name (optional)</label>
+          <input class="feedback-input" type="text" id="feedbackName" name="name" maxlength="80" placeholder="e.g. Alex M." autocomplete="name" />
+        </div>
+        <div class="feedback-field">
+          <label class="feedback-label" for="feedbackCountry">Country (optional)</label>
+          <input class="feedback-input" type="text" id="feedbackCountry" name="country" maxlength="80" placeholder="e.g. Spain" autocomplete="country-name" />
+        </div>
+      </div>
+
+      <!-- Honeypot: hidden from people, bots tend to fill it. Leave as-is. -->
+      <div class="feedback-hp" aria-hidden="true">
+        <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--lg">Send feedback</button>
+      <p class="feedback-status" data-form-status role="status"></p>
+    </form>
+
+    <div class="feedback-success" data-feedback-success tabindex="-1" hidden>
+      <div class="feedback-success__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="m5 12.5 4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2 class="feedback-success__title">Thank you!</h2>
+      <p class="feedback-success__text">Your feedback has gone straight to our team.</p>
+      <a href="/" class="btn btn--secondary btn--lg">Back to Home</a>
+    </div>
+
+  </main>
+
+  <nav class="app-nav" aria-label="Primary">
+    <a href="/" class="app-nav__item" data-action="nav:home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 11.5 12 4l8 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v9.5h12V10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="markets.html" class="app-nav__item" data-action="nav:markets">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19V10M12 19V5M19 19v-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span>Markets</span>
+    </a>
+    <a href="login.html" class="app-nav__item" data-action="nav:trade">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 7h13M17 7l-3-3M17 7l-3 3M20 17H7M7 17l3 3M7 17l3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Trade</span>
+    </a>
+    <a href="promotions.html" class="app-nav__item" data-action="nav:earn">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/><circle cx="15" cy="12" r="5" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Earn</span>
+    </a>
+    <a href="login.html" class="app-nav__item" data-action="nav:funds">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="1.8" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 10h17" stroke="currentColor" stroke-width="1.6"/></svg>
+      <span>Funds</span>
+    </a>
+  </nav>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/feedback.js" defer></script>
+</body>
+</html>

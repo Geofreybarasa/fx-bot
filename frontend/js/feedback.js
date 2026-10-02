@@ -1,8 +1,9 @@
 /**
  * feedback.js
  * ------------------------------------------------------------------
- * Powers the "Send your feedback" modal (<dialog id="feedbackDialog">
- * on index.html). Any element with data-action="feedback:open" opens it.
+ * Powers the standalone feedback.html page (star rating, validation,
+ * submit). No dialog/modal logic here on purpose — a plain page avoids
+ * <dialog> cross-browser quirks entirely.
  *
  * Submits POST {API_BASE_URL}/feedback with:
  *   { rating: 1-5, message: string, name: string|null, country: string|null }
@@ -12,10 +13,6 @@
  * Spam handling on this side: a hidden honeypot field. If a bot fills it,
  * we pretend it worked and send nothing. Real protection (rate limiting)
  * lives on the backend.
- *
- * Feedback is private ("not posted publicly" per the UI copy). Nothing here
- * or on the backend should ever publish it to the homepage reviews section
- * without a human review and the author's consent.
  * ------------------------------------------------------------------
  */
 (function () {
@@ -24,24 +21,20 @@
   var MIN_MESSAGE = 5;
   var MAX_MESSAGE = 2000;
 
-  var dialog = document.getElementById('feedbackDialog');
-  if (!dialog) return;
+  var form = document.querySelector('[data-form="feedback"]');
+  if (!form) return;
 
-  var form = dialog.querySelector('[data-form="feedback"]');
-  var success = dialog.querySelector('[data-feedback-success]');
-  var ratingGroup = dialog.querySelector('[data-rating]');
+  var success = document.querySelector('[data-feedback-success]');
+  var ratingGroup = document.querySelector('[data-rating]');
   var stars = Array.prototype.slice.call(ratingGroup.querySelectorAll('.rating__star'));
   var messageEl = form.querySelector('[name="message"]');
   var nameEl = form.querySelector('[name="name"]');
   var countryEl = form.querySelector('[name="country"]');
   var honeypotEl = form.querySelector('[name="website"]');
-  var counterEl = dialog.querySelector('[data-feedback-count]');
+  var counterEl = document.querySelector('[data-feedback-count]');
   var statusEl = form.querySelector('[data-form-status]');
   var submitButton = form.querySelector('[type="submit"]');
   var submitting = false;
-  var pointerStartedOnBackdrop = false;
-
-  /* ---------- helpers ---------- */
 
   function selectedRating() {
     var checked = form.querySelector('input[name="rating"]:checked');
@@ -68,67 +61,6 @@
   function updateCounter() {
     if (counterEl) counterEl.textContent = String(messageEl.value.length);
   }
-
-  function resetForm() {
-    form.reset();
-    paintStars(0);
-    updateCounter();
-    setError('rating', '');
-    setError('message', '');
-    setStatus('', false);
-    form.hidden = false;
-    success.hidden = true;
-  }
-
-  /* ---------- open / close ---------- */
-
-  function openDialog() {
-    resetForm();
-    if (typeof dialog.showModal === 'function') {
-      dialog.showModal();
-    } else {
-      dialog.setAttribute('open', ''); // very old browsers: shown, just not modal
-    }
-    document.body.classList.add('has-modal');
-  }
-
-  function closeDialog() {
-    if (typeof dialog.close === 'function') {
-      dialog.close();
-    } else {
-      dialog.removeAttribute('open');
-      document.body.classList.remove('has-modal');
-    }
-  }
-
-  // Fires for every way of closing (X button, Esc key, backdrop, success button).
-  dialog.addEventListener('close', function () {
-    document.body.classList.remove('has-modal');
-  });
-
-  document.addEventListener('click', function (event) {
-    var opener = event.target.closest('[data-action="feedback:open"]');
-    if (opener) {
-      event.preventDefault();
-      openDialog();
-    }
-  });
-
-  dialog.querySelectorAll('[data-feedback-close]').forEach(function (button) {
-    button.addEventListener('click', closeDialog);
-  });
-
-  // Backdrop click closes — but only if the press STARTED on the backdrop
-  // (otherwise selecting text in the textarea and releasing outside would
-  // close it), and never while there's unsent text (don't lose someone's typing).
-  dialog.addEventListener('pointerdown', function (event) {
-    pointerStartedOnBackdrop = event.target === dialog;
-  });
-  dialog.addEventListener('click', function (event) {
-    if (event.target === dialog && pointerStartedOnBackdrop && !messageEl.value.trim()) {
-      closeDialog();
-    }
-  });
 
   /* ---------- star rating ---------- */
 
