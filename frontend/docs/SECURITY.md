@@ -25,7 +25,7 @@ properly even at this layer.
 - **Content-Security-Policy**, roughly:
   ```
   default-src 'self';
-  img-src 'self' data:;
+  img-src 'self' data: https:;
   style-src 'self' https://fonts.googleapis.com;
   font-src https://fonts.gstatic.com;
   script-src 'self';
@@ -34,6 +34,11 @@ properly even at this layer.
   base-uri 'self';
   form-action 'self';
   ```
+  `img-src` deliberately allows any `https:` host, not just `'self'`. The
+  News page displays article images pulled live from several publisher
+  CDNs whose exact hostnames aren't known in advance and can change — a
+  narrower `img-src` will silently block every one of those images (the
+  page still works, it just shows the fallback icon for everything).
   Adjust `connect-src`/`script-src` to match your real ticker/API
   hosts. No `unsafe-inline` / `unsafe-eval` should ever be needed for
   this page as written.
