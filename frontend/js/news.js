@@ -10,9 +10,10 @@
  * (target="_blank", rel="noopener noreferrer") — this page never shows
  * full article bodies, only the short `summary` the feed itself provides.
  *
- * Safety: all text is written with textContent, never innerHTML, so a
- * hostile title/summary from a feed can't inject markup. `imageUrl` is
- * only ever used as an <img src>, never rendered as HTML.
+ * Safety: all feed text is written with textContent, never innerHTML, so
+ * a hostile title/summary from a feed can't inject markup. `imageUrl` is
+ * only ever used as an <img src> after safeImageUrl() (https only).
+ * The only innerHTML use is for static, hardcoded SVG icon strings.
  *
  * No backend yet, or the request fails: falls back to DEMO_ITEMS below
  * so the page is never blank during frontend-only development. Never
@@ -61,6 +62,8 @@
 
   var FALLBACK_SOURCES = [{ id: 'forexfactory', name: 'ForexFactory', siteUrl: 'https://www.forexfactory.com/news', linkOnly: true }];
 
+  var PLACEHOLDER_SVG = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="1.8" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="10" r="1.6" stroke="currentColor" stroke-width="1.5"/><path d="m5 17 4.5-4.5L12 15l3-3.5 4 4.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+
   function el(tag, className, text) {
     var node = document.createElement(tag);
     if (className) node.className = className;
@@ -84,33 +87,57 @@
     try { return new URL(url).hostname.replace(/^www\./, ''); } catch (err) { return ''; }
   }
 
+  /* ---------- Images (loaded strictly from the publisher's own site) ---------- */
+
+  // Accept only absolute https URLs. Upgrades http (avoids mixed-content
+  // blocking), resolves relative paths against the publisher's site, and
+  // rejects javascript:, data: and anything else.
+  function safeImageUrl(raw, base) {
+    if (!raw || typeof raw !== 'string') return null;
+    try {
+      var u = new URL(raw.trim(), base || undefined);
+      if (u.protocol === 'http:') u.protocol = 'https:';
+      return u.protocol === 'https:' ? u.href : null;
+    } catch (err) { return null; }
+  }
+
+  function setFallback(wrap) {
+    wrap.textContent = '';
+    wrap.classList.add('news-card__media--fallback');
+    wrap.innerHTML = PLACEHOLDER_SVG; // static string, no feed data
+  }
+
   function buildImage(item) {
     var wrap = el('div', 'news-card__media');
-    if (!item.imageUrl) {
-      wrap.classList.add('news-card__media--fallback');
-      wrap.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="1.8" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="10" r="1.6" stroke="currentColor" stroke-width="1.5"/><path d="m5 17 4.5-4.5L12 15l3-3.5 4 4.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
-      return wrap;
-    }
+    var src = safeImageUrl(item.imageUrl, item.sourceUrl);
+    if (!src) { setFallback(wrap); return wrap; }
+
     var img = document.createElement('img');
-    img.src = item.imageUrl;
     img.alt = '';
     img.loading = 'lazy';
-    // NOTE: do NOT set referrerPolicy="no-referrer" here. Several
-    // publisher CDNs (Cointelegraph included) use hotlink protection that
-    // checks the Referer header and silently reject the image request
-    // when it's stripped — this was the actual cause of images not
-    // showing. Leave the browser's default (strict-origin-when-cross-origin),
-    // which still protects the full URL/query string while remaining
-    // compatible with these CDNs.
-    // If the image 404s or a host still blocks it, drop back to the
-    // plain icon instead of showing a broken-image glyph.
+    img.decoding = 'async';
+
+    // First attempt uses the browser's default referrer (some CDNs, like
+    // Cointelegraph's, reject requests with no Referer). If that fails,
+    // retry ONCE with no referrer (other CDNs reject unknown referers).
+    // Only then fall back to the placeholder icon.
+    var retried = false;
     img.addEventListener('error', function () {
-      wrap.classList.add('news-card__media--fallback');
-      wrap.innerHTML = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="1.8" stroke="currentColor" stroke-width="1.5"/><circle cx="9" cy="10" r="1.6" stroke="currentColor" stroke-width="1.5"/><path d="m5 17 4.5-4.5L12 15l3-3.5 4 4.5" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
-    }, { once: true });
+      if (!retried) {
+        retried = true;
+        img.referrerPolicy = 'no-referrer';
+        img.src = src;
+        return;
+      }
+      setFallback(wrap);
+    });
+
+    img.src = src;
     wrap.appendChild(img);
     return wrap;
   }
+
+  /* ---------- Cards ---------- */
 
   function buildCard(item) {
     var card = el('a', 'news-card');
