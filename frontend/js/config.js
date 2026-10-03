@@ -20,7 +20,7 @@ window.APP_CONFIG = {
   // Backend endpoints. Leave null in local dev if the backend isn't
   // up yet — the frontend degrades gracefully (ticker shows demo data,
   // "Sign in" just follows its href).
-  API_BASE_URL: null,        // e.g. 'https://api.fx-bot.example/api/v1'
+  API_BASE_URL: 'http://localhost:3000/api/v1' ,       // e.g. 'https://api.fx-bot.example/api/v1'
   TICKER_WS_URL: null,       // e.g. 'wss://api.fx-bot.example/v1/ticker'
   TICKER_AUTOCONNECT: false  // flip to true once TICKER_WS_URL is set
 };

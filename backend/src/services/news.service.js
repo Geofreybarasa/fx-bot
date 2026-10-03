@@ -29,14 +29,29 @@
  * ForexFactory later offers a real feed or a data partnership, add it
  * to SOURCES the same way as the other three and remove `linkOnly`.
  *
+ * IMAGES (always the publisher's own image, never generated or stock):
+ *   1. <enclosure> when its type is an image
+ *   2. <media:content> / <media:thumbnail>
+ *   3. first <img src> in the item's HTML body
+ *   4. og:image / twitter:image read from the article page itself —
+ *      used only when 1-3 found nothing (e.g. feeds with no image).
+ *      Step 4 fetches ONLY the article URL already in the feed, only
+ *      over https, only if its host matches the source's own site, with
+ *      a short timeout and a byte cap, and caches the result.
+ *   All URLs are normalized to absolute https (http is upgraded).
+ *
  * Caching: each feed is fetched at most once per CACHE_TTL_MS, and a
  * fetch failure serves the last good cache instead of an empty list
  * (stale-while-error) — one flaky publisher shouldn't blank the page,
  * and it keeps request volume to these free feeds polite.
+ *
+ * Requires Node 18+ (global fetch, AbortSignal.timeout).
  * ------------------------------------------------------------------
  */
 const Parser = require('rss-parser');
 const logger = require('../utils/logger');
+
+const USER_AGENT = 'FxBotNewsAggregator/1.0 (+https://fx-bot.example)';
 
 // rss-parser's DEFAULT User-Agent is literally the string "rss-parser",
 // which Cloudflare (in front of all three publishers below) treats as an
@@ -47,7 +62,7 @@ const logger = require('../utils/logger');
 const parser = new Parser({
   timeout: 10000,
   headers: {
-    'User-Agent': 'FxBotNewsAggregator/1.0 (+https://fx-bot.example)',
+    'User-Agent': USER_AGENT,
     Accept: 'application/rss+xml, application/xml, text/xml, */*'
   },
   // Pull in fields rss-parser doesn't map by default, so we can find an
@@ -56,7 +71,7 @@ const parser = new Parser({
   customFields: {
     item: [
       ['media:content', 'mediaContent', { keepArray: true }],
-      ['media:thumbnail', 'mediaThumbnail'],
+      ['media:thumbnail', 'mediaThumbnail', { keepArray: true }],
       ['content:encoded', 'contentEncoded'],
       ['dc:creator', 'dcCreator']
     ]
@@ -71,6 +86,12 @@ const MAX_SUMMARY_LENGTH = 220;
 // headlines published in roughly the last day. Items with no parseable
 // date are kept (can't prove they're stale) rather than silently dropped.
 const MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+// Article-page image lookup limits
+const PAGE_TIMEOUT_MS = 4000;
+const MAX_HTML_BYTES = 300 * 1024; // og tags live in <head>; never read more
+const PAGE_CACHE_MS = 6 * 60 * 60 * 1000;
+const PAGE_CONCURRENCY = 5;
 
 /** @typedef {{ id: string, name: string, feedUrl: string, siteUrl: string }} FeedSource */
 
@@ -90,6 +111,9 @@ const LINK_ONLY_SOURCES = [
 /** In-memory per-source cache: { [sourceId]: { items, fetchedAt } } */
 const cache = Object.create(null);
 
+/** In-memory article-page image cache: Map<articleUrl, { url, at }> (url may be null) */
+const pageImageCache = new Map();
+
 // ---- Pure helpers (unit tested directly, no network involved) ----------
 
 /** Strips any stray HTML and collapses whitespace. Defense in depth —
@@ -106,23 +130,54 @@ function truncate(text, maxLength) {
   return text.slice(0, maxLength - 1).trimEnd() + '\u2026';
 }
 
-/** Finds a usable article image across the different shapes these feeds use. */
+/** Absolute https URL or null. Upgrades http, resolves relative paths against `base`. */
+function toHttps(raw, base) {
+  if (!raw || typeof raw !== 'string') return null;
+  try {
+    const u = new URL(raw.trim().replace(/&amp;/g, '&'), base);
+    if (u.protocol === 'http:') u.protocol = 'https:';
+    return u.protocol === 'https:' ? u.href : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+/** True when `articleUrl` is on the same site (or a subdomain) as `siteUrl`. */
+function isSameSite(articleUrl, siteUrl) {
+  try {
+    const strip = (h) => h.replace(/^www\./, '');
+    const a = strip(new URL(articleUrl).hostname);
+    const s = strip(new URL(siteUrl).hostname);
+    return a === s || a.endsWith('.' + s);
+  } catch (err) {
+    return false;
+  }
+}
+
+/** Finds a usable article image inside the feed item itself (steps 1-3). */
 function extractImage(rawItem) {
-  if (rawItem.enclosure && rawItem.enclosure.url) return rawItem.enclosure.url;
+  const base = rawItem.link;
 
-  const media = rawItem.mediaContent;
-  if (Array.isArray(media)) {
-    const withUrl = media.find((m) => m && m.$ && m.$.url);
-    if (withUrl) return withUrl.$.url;
-  }
-  if (rawItem.mediaThumbnail && rawItem.mediaThumbnail.$ && rawItem.mediaThumbnail.$.url) {
-    return rawItem.mediaThumbnail.$.url;
+  const enc = rawItem.enclosure;
+  if (enc && enc.url && (!enc.type || /^image\//i.test(enc.type))) {
+    const url = toHttps(enc.url, base);
+    if (url) return url;
   }
 
-  // Last resort: pull the first <img src="..."> out of the full HTML body.
-  const html = rawItem.contentEncoded || rawItem.content || '';
+  const media = [].concat(rawItem.mediaContent || [], rawItem.mediaThumbnail || []);
+  for (const m of media) {
+    const attrs = (m && m.$) || {};
+    const isImage = (!attrs.medium || attrs.medium === 'image') && (!attrs.type || /^image\//i.test(attrs.type));
+    if (attrs.url && isImage) {
+      const url = toHttps(attrs.url, base);
+      if (url) return url;
+    }
+  }
+
+  // Last in-feed resort: first <img src="..."> in the full HTML body.
+  const html = rawItem.contentEncoded || rawItem.content || rawItem.description || '';
   const match = /<img[^>]+src=["']([^"'>]+)["']/i.exec(html);
-  return match ? match[1] : null;
+  return match ? toHttps(match[1], base) : null;
 }
 
 /** First non-generic RSS <category>, used as the small tag on each card. */
@@ -176,6 +231,65 @@ function mergeAndSort(itemLists, limit = MAX_ITEMS, now = Date.now()) {
 
 // ---- I/O layer -----------------------------------------------------------
 
+/** Step 4: read og:image / twitter:image from the article page's <head>. */
+async function fetchArticleImage(articleUrl, siteUrl) {
+  if (!articleUrl || !/^https:/i.test(articleUrl) || !isSameSite(articleUrl, siteUrl)) return null;
+
+  const hit = pageImageCache.get(articleUrl);
+  if (hit && Date.now() - hit.at < PAGE_CACHE_MS) return hit.url;
+
+  let found = null;
+  try {
+    const res = await fetch(articleUrl, {
+      redirect: 'follow',
+      signal: AbortSignal.timeout(PAGE_TIMEOUT_MS),
+      headers: { 'User-Agent': USER_AGENT, Accept: 'text/html' }
+    });
+    if (res.ok && /text\/html/i.test(res.headers.get('content-type') || '')) {
+      const reader = res.body.getReader();
+      let html = '';
+      let bytes = 0;
+      while (bytes < MAX_HTML_BYTES) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        bytes += value.length;
+        html += Buffer.from(value).toString('utf8');
+        if (html.includes('</head>')) break;
+      }
+      reader.cancel().catch(() => {});
+
+      // Attribute order varies between sites, so inspect each <meta> tag.
+      const wanted = /(?:property|name)=["'](?:og:image(?::secure_url)?|twitter:image)["']/i;
+      for (const tag of html.match(/<meta\b[^>]*>/gi) || []) {
+        if (!wanted.test(tag)) continue;
+        const content = /content=["']([^"']+)["']/i.exec(tag);
+        if (content) { found = content[1]; break; }
+      }
+    }
+  } catch (err) {
+    // timeout / network / blocked: leave null, the page shows its icon
+  }
+
+  const url = toHttps(found, articleUrl);
+  pageImageCache.set(articleUrl, { url, at: Date.now() });
+  return url;
+}
+
+/** For items still missing an image, try the article page (bounded concurrency). */
+async function fillMissingImages(items) {
+  const queue = items.filter((item) => !item.imageUrl);
+  if (!queue.length) return items;
+
+  async function worker() {
+    while (queue.length) {
+      const item = queue.shift();
+      item.imageUrl = await fetchArticleImage(item.url, item.sourceUrl);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(PAGE_CONCURRENCY, queue.length) }, worker));
+  return items;
+}
+
 async function fetchSource(source) {
   const cached = cache[source.id];
   const isFresh = cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS;
@@ -195,7 +309,10 @@ async function fetchSource(source) {
 
 async function getNews() {
   const results = await Promise.all(LIVE_SOURCES.map(fetchSource));
-  return mergeAndSort(results);
+  const merged = mergeAndSort(results);
+  // Only the items actually being shown are looked up, and each article
+  // page is fetched at most once per PAGE_CACHE_MS.
+  return fillMissingImages(merged);
 }
 
 /** Static metadata for the filter pills, including the link-only ForexFactory card. */
@@ -214,5 +331,7 @@ module.exports = {
   normalizeItem,
   mergeAndSort,
   stripHtml,
-  truncate
+  truncate,
+  extractImage,
+  toHttps
 };

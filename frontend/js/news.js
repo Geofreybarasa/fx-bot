@@ -29,6 +29,7 @@
   if (!content) return;
 
   var lastUpdated = null;
+  var isDemo = false;
   var items = [];
   var relativeFormat = null;
   try { relativeFormat = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' }); } catch (err) { /* very old browser */ }
@@ -206,6 +207,7 @@
   function render(newsItems, sources) {
     content.textContent = '';
     items = newsItems;
+    isDemo = newsItems === DEMO_ITEMS;
 
     var list = el('div', 'news-list');
     newsItems.forEach(function (item) { list.appendChild(buildCard(item)); });
@@ -218,7 +220,9 @@
   }
 
   function tickTimestamps() {
-    if (updatedLabelEl && lastUpdated) {
+    if (updatedLabelEl && isDemo) {
+      updatedLabelEl.textContent = 'DEMO DATA, backend not connected';
+    } else if (updatedLabelEl && lastUpdated) {
       var seconds = Math.max(0, Math.round((Date.now() - lastUpdated) / 1000));
       updatedLabelEl.textContent = seconds < 5 ? 'updated just now' : 'updated ' + seconds + 's ago';
     }
